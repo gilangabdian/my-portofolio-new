@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 import Homepage from "./components/Homepage/Homepage.vue";
 import DashboardAdmin from "./components/LayoutAdmin/DashboardAdmin.vue";
 import AdminDashboard from "./components/Admin/Pages/AdminDashboard.vue";
@@ -162,6 +164,7 @@ const router = createRouter({
 
 // [BEST PRACTICE] Global Navigation Guard
 router.beforeEach((to, from, next) => {
+  NProgress.start();
   // Ambil token dari localStorage (sesuaikan key-nya dengan kode login Anda)
   const token = localStorage.getItem("token");
 
@@ -192,6 +195,7 @@ router.beforeEach((to, from, next) => {
 
 // Force global scrolling systems like Lenis to update scroll state after navigation
 router.afterEach((to, from) => {
+  NProgress.done();
   // Only execute scroll jump if the route actually changed (avoids triggering on modal pushState/popState)
   if (to.path !== from.path) {
     // Reset window position manually just in case

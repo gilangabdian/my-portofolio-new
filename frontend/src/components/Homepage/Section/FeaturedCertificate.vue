@@ -73,11 +73,10 @@ onUnmounted(() => {
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-12">
         <h2
-          class="text-4xl font-black text-black mb-6 font-serif uppercase tracking-wider inline-block relative border-b border-black/20 pb-2">
+          class="text-4xl font-black text-black mb-6 font-serif tracking-wider inline-block relative border-b border-black/20 pb-2">
           <span class="relative z-10">Featured Certificates</span>
-          <span class="absolute top-0 left-0 w-full h-full bg-[#E7E7E7] -z-0 -rotate-2 opacity-50"></span>
         </h2>
-        <p class="mt-4 font-[Inter] text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
+        <p class="mt-4 font-sans text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
           validated competence. chronological record of technical milestones and authorized skills.
         </p>
       </div>
@@ -168,7 +167,7 @@ onUnmounted(() => {
           <div class="p-6 border-t-2 border-black bg-gray-50 rounded-b-lg shrink-0">
             <div class="flex flex-col gap-3">
               <a v-if="selectedCert?.credential_link" :href="selectedCert?.credential_link" target="_blank"
-                class="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold border border-transparent rounded bg-black text-white hover:bg-black/90 transition-colors shadow-sm">
+                class="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold border border-transparent rounded bg-black hover:bg-black/90 text-white dark:bg-white dark:hover:bg-gray-200 dark:!text-black transition-colors shadow-sm">
                 <Icon icon="mdi:certificate-outline" class="text-xl" />
                 Verify Credential
               </a>

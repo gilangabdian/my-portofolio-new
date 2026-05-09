@@ -38,9 +38,9 @@ const statusText = computed(() => {
         </div>
 
         <!-- Progress Bar (Thin & Elegant) -->
-        <div class="w-full h-[2px] bg-white/10 overflow-hidden rounded-full">
+        <div class="w-full h-[2px] bg-[#ffffff]/10 overflow-hidden rounded-full">
           <div
-            class="h-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+            class="h-full bg-[#ffffff] shadow-[0_0_8px_rgba(255,255,255,0.5)]"
             :style="{ width: smoothPercent + '%' }"></div>
         </div>
       </div>
@@ -52,8 +52,8 @@ const statusText = computed(() => {
     </div>
     
     <!-- Decorative subtle glow in corners for premium feel -->
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ffffff]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#ffffff]/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
   </div>
 </template>
 

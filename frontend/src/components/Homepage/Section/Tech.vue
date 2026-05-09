@@ -75,13 +75,12 @@ onMounted(async () => {
     <div class="max-w-6xl mx-auto">
       <div class="header-section text-center mb-20 max-w-3xl mx-auto">
         <h2
-          class="header-animate text-4xl font-black text-black mb-6 font-serif uppercase tracking-wider inline-block relative border-b border-black/20 pb-2">
+          class="header-animate text-4xl font-black text-black mb-6 font-serif tracking-wider inline-block relative border-b border-black/20 pb-2">
           <span class="relative z-10">Tech Stack</span>
-          <span class="absolute top-0 left-0 w-full h-full bg-[#E7E7E7] -z-0 -rotate-2 opacity-50"></span>
         </h2>
 
         <p
-          class="header-animate mt-4 font-[Inter] text-gray-500 text-sm md:text-base lowercase tracking-tight leading-relaxed">
+          class="header-animate mt-4 font-sans text-gray-500 text-sm md:text-base lowercase tracking-tight leading-relaxed">
           here are the tools and technologies I have worked with to build my projects. My stack evolves as I learn, but
           every tool has played a role in my journey. I am mostly self-taught and still learning every day—treating
           every line of code as an opportunity to discover something new.
@@ -89,13 +88,12 @@ onMounted(async () => {
       </div>
 
       <div class="flex flex-wrap justify-center gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16 p-4">
-        <div
-          v-for="(skill, index) in props.skills"
-          :key="skill.id"
+        <div v-for="(skill, index) in props.skills" :key="skill.id"
           class="polaroid-card relative group w-[45%] md:w-[28%] lg:w-[16%] max-w-[180px]"
           :class="[getRotationClass(index), getTranslateClass(index)]">
           <div
-            class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full z-20 shadow-sm border border-gray-600"></div>
+            class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full z-20 shadow-sm border border-gray-600">
+          </div>
 
           <div
             class="bg-white p-3 pb-8 border border-black/20 shadow-sm transition-all duration-300 hover:scale-105 hover:z-10 hover:shadow-md hover:rotate-0 cursor-default rounded-sm">

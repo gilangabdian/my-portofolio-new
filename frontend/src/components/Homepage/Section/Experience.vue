@@ -159,13 +159,12 @@ onUnmounted(() => {
       <div class="text-center mb-12">
         <div class="journey-header inline-block">
           <h2
-            class="text-4xl font-black text-black mb-6 font-serif uppercase tracking-wider inline-block relative border-b border-black/20 pb-2">
+            class="text-4xl font-black text-black mb-6 font-serif tracking-wider inline-block relative border-b border-black/20 pb-2">
             <span class="relative z-10">My Journey</span>
-            <span class="absolute top-0 left-0 w-full h-full bg-[#E7E7E7] -z-0 -rotate-2 opacity-50"></span>
           </h2>
         </div>
         <p
-          class="journey-header mt-4 font-mono text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
+          class="journey-header mt-4 font-sans text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
           professional trajectory. executing solutions and refining architectures. continuous integration of practical
           experience into technical mastery.
         </p>
@@ -177,32 +176,32 @@ onUnmounted(() => {
 
       <div v-else class="experience-list relative">
         <div
-          class="journey-line absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] md:-ml-[0.5px] bg-black/20 z-0 origin-top"></div>
+          class="journey-line absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] md:-ml-[0.5px] bg-black/20 dark:bg-white/20 z-0 origin-top">
+        </div>
 
         <div class="relative z-10 mb-12 flex items-center md:justify-center pl-4 md:pl-0">
           <div
-            class="journey-header bg-white text-black font-bold px-4 py-1 uppercase text-sm border border-black/20 shadow-sm animate-pulse-slow">
+            class="journey-header bg-white dark:!bg-[#ffffff] text-black dark:!text-black font-bold px-4 py-1 uppercase text-sm border border-black/20 shadow-sm animate-pulse-slow">
             NOW / FUTURE
           </div>
         </div>
 
         <div class="space-y-12 md:space-y-0">
-          <div
-            v-for="(exp, index) in sortedExperiences"
-            :key="exp.id"
+          <div v-for="(exp, index) in sortedExperiences" :key="exp.id"
             class="experience-item relative flex flex-col md:flex-row items-start group"
             :class="index % 2 === 0 ? 'md:flex-row-reverse' : ''">
             <div
-              class="timeline-dot absolute left-4 md:left-1/2 w-3 h-3 -ml-[5px] md:-ml-[6px] bg-white border-2 border-black/40 rounded-full z-20 top-8 group-hover:scale-150 group-hover:border-black group-hover:bg-black transition-all duration-300"></div>
+              class="timeline-dot absolute left-4 md:left-1/2 w-3 h-3 -ml-[5px] md:-ml-[6px] bg-white dark:!bg-[#ffffff] border-2 border-black/40 dark:!border-[#ffffff] rounded-full z-20 top-8 group-hover:scale-150 group-hover:border-black group-hover:bg-black transition-all duration-300">
+            </div>
 
-            <div
-              class="experience-date hidden md:block w-1/2 px-10 pt-6"
+            <div class="experience-date hidden md:block w-1/2 px-10 pt-6"
               :class="index % 2 === 0 ? 'text-left' : 'text-right'">
               <div class="font-black text-2xl uppercase italic">{{ formatDate(exp.start_date) }}</div>
               <div class="font-mono text-gray-500 font-bold text-sm">
                 {{ exp.end_date ? formatDate(exp.end_date) : "PRESENT" }}
               </div>
-              <div class="mt-2 inline-block bg-gray-50 border border-black/10 px-2 py-0.5 text-xs font-bold font-mono">
+              <div
+                class="mt-2 inline-block bg-gray-50 border border-black/10 px-2 py-0.5 text-xs font-bold font-mono">
                 {{ getDuration(exp.start_date, exp.end_date) }}
               </div>
             </div>
@@ -217,7 +216,7 @@ onUnmounted(() => {
                     </span>
                   </div>
                   <span
-                    class="inline-block bg-[#E7E7E7] border border-black px-2 py-0.5 text-[10px] font-bold font-mono">
+                    class="inline-block bg-[#E7E7E7] dark:!bg-white border border-black px-2 py-0.5 text-[10px] font-bold font-mono dark:!text-black">
                     {{ getDuration(exp.start_date, exp.end_date) }}
                   </span>
                 </div>
@@ -229,8 +228,7 @@ onUnmounted(() => {
                 <div class="flex flex-wrap items-center gap-2 mb-4">
                   <span
                     class="text-black font-bold flex items-center gap-1.5 border-b border-transparent hover:border-black/40 transition-colors">
-                    <Icon
-                      :icon="exp.status === 'Education' ? 'lucide:graduation-cap' : 'lucide:building-2'"
+                    <Icon :icon="exp.status === 'Education' ? 'lucide:graduation-cap' : 'lucide:building-2'"
                       class="w-4 h-4" />
                     {{ exp.company_name }}
                   </span>
@@ -246,8 +244,7 @@ onUnmounted(() => {
                   {{ exp.location }}
                 </div>
 
-                <div
-                  v-html="renderMarkdown(exp.description)"
+                <div v-html="renderMarkdown(exp.description)"
                   class="markdown-content font-mono text-sm leading-relaxed text-gray-700 mb-6"></div>
 
                 <div v-if="!exp.end_date" class="absolute -top-3 -right-3 rotate-3">
@@ -262,7 +259,7 @@ onUnmounted(() => {
 
         <div class="relative z-10 mt-12 flex items-center md:justify-center pl-4 md:pl-0">
           <div
-            class="journey-header bg-white text-black font-black px-4 py-2 uppercase text-sm border border-black/20 flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow">
+            class="journey-header bg-white dark:!bg-[#ffffff] text-black dark:!text-black font-black px-4 py-2 uppercase text-sm border border-black/20 flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow">
             <Icon icon="lucide:flag" />
             START JOURNEY
           </div>

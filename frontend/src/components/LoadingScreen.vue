@@ -14,16 +14,16 @@
         </div>
 
         <!-- Progress Bar (Infinite Loop style for secondary loads) -->
-        <div class="w-full h-[1px] bg-white/10 overflow-hidden rounded-full">
-          <div class="h-full bg-white animate-loading-bar-infinite shadow-[0_0_8px_rgba(255,255,255,0.4)]"></div>
+        <div class="w-full h-[1px] bg-[#ffffff]/10 overflow-hidden rounded-full">
+          <div class="h-full bg-[#ffffff] animate-loading-bar-infinite shadow-[0_0_8px_rgba(255,255,255,0.4)]"></div>
         </div>
       </div>
 
     </div>
     
     <!-- Decorative subtle glow -->
-    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#ffffff]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#ffffff]/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
   </div>
 </template>
 

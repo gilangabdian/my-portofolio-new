@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, nextTick, watch } from "vue";
-import LoadingScreen from "../LoadingScreen.vue";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 import { alertError } from "../../lib/alert";
 import { getAllProjects } from "../../lib/api/ProjectApi";
 import { Icon } from "@iconify/vue";
@@ -45,6 +46,7 @@ const statusClass = (status) => {
 // --- FUNCTION FETCH DATA (Dengan Delay Buatan agar Smooth) ---
 async function fetchProjects() {
   loading.value = true;
+  NProgress.start();
   try {
     const response = await getAllProjects();
     const responseBody = await response.json();
@@ -57,6 +59,7 @@ async function fetchProjects() {
   } catch (e) {
     console.error(`Error fetch projects:`, e);
   } finally {
+    NProgress.done();
     // Delay 800ms sebelum loading hilang agar transisi tidak kasar
     setTimeout(() => {
       loading.value = false;
@@ -123,27 +126,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white mb-40">
+  <div class="min-h-screen mb-40">
     <div class="px-4 py-16 md:px-8 max-w-6xl mx-auto">
-      <Transition name="fade">
-        <LoadingScreen v-if="loading" />
-      </Transition>
+
 
       <div v-if="!loading">
         <div class="text-center mb-12 -mt-12 md:mt-7 page-title" style="opacity: 0; visibility: hidden">
-          <h1
-            class="text-3xl md:text-5xl font-black font-serif uppercase tracking-wider inline-block relative border-b border-black/20 pb-2">
-            <span class="relative z-10">All Projects</span>
-            <span class="absolute top-0 left-0 w-full h-full bg-gray-200 -z-0 -rotate-1 skew-x-12 opacity-70"></span>
+          <h1 class="anim-text text-2xl md:text-3xl font-bold tracking-wide text-black">
+            All Projects
           </h1>
-          <p class="mt-4 font-[Inter] text-gray-600 text-sm max-w-xl mx-auto italic">
+          <p class="mt-4 font-sans text-gray-600 text-sm md:text-base max-w-xl mx-auto italic">
             "A collection of crafted code, deployed solutions, and creative experiments."
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
-          <div v-for="project in projects" :key="project.id"
-            @click="openModal(project)"
+          <div v-for="project in projects" :key="project.id" @click="openModal(project)"
             class="project-card group flex flex-col p-3 bg-white rounded-xl border border-black/20 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer"
             style="opacity: 0; visibility: hidden">
             <div
@@ -157,7 +155,8 @@ onMounted(async () => {
             </div>
 
             <div class="flex flex-col flex-grow px-1">
-              <h3 class="text-base font-bold font-serif leading-tight mb-2 group-hover:underline decoration-2 underline-offset-2">
+              <h3
+                class="text-base font-bold font-serif leading-tight mb-2 group-hover:underline decoration-2 underline-offset-2">
                 {{ project.title }}
               </h3>
 
@@ -277,7 +276,7 @@ onMounted(async () => {
                   View Code
                 </a>
                 <a v-if="selectedProject?.live_demo_link" :href="selectedProject?.live_demo_link" target="_blank"
-                  class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold border border-transparent rounded-lg bg-black hover:bg-black/80 text-white transition-colors shadow-sm">
+                  class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold border border-transparent rounded-lg bg-black hover:bg-black/80 text-white dark:bg-white dark:hover:bg-gray-200 dark:!text-black transition-colors shadow-sm">
                   <Icon icon="mdi:external-link" class="text-xl" />
                   Live Demo
                 </a>

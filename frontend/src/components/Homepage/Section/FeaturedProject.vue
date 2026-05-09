@@ -89,11 +89,10 @@ onUnmounted(() => {
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-12">
         <h2
-          class="text-4xl font-black text-black mb-6 font-serif uppercase tracking-wider inline-block relative border-b border-black/20 pb-2">
+          class="text-4xl font-black text-black mb-6 font-serif tracking-wider inline-block relative border-b border-black/20 pb-2">
           <span class="relative z-10">Featured Projects</span>
-          <span class="absolute top-0 left-0 w-full h-full bg-[#E7E7E7] -z-0 -rotate-2 opacity-50"></span>
         </h2>
-        <p class="mt-4 font-[Inter] text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
+        <p class="mt-4 font-sans text-gray-500 text-sm md:text-base lowercase tracking-tight max-w-xl mx-auto">
           selected works. engineering abstract concepts into scalable production systems.
         </p>
       </div>
@@ -237,7 +236,7 @@ onUnmounted(() => {
                   View Code
                 </a>
                 <a v-if="selectedProject?.live_demo_link" :href="selectedProject?.live_demo_link" target="_blank"
-                  class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold border border-transparent rounded-lg bg-black hover:bg-black/80 text-white transition-colors shadow-sm">
+                  class="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold border border-transparent rounded-lg bg-black hover:bg-black/80 text-white dark:bg-white dark:hover:bg-gray-200 dark:!text-black transition-colors shadow-sm">
                   <Icon icon="mdi:external-link" class="text-xl" />
                   Live Demo
                 </a>

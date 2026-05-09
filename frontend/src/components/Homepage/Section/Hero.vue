@@ -118,7 +118,7 @@ watch(
     <div class="flex flex-col-reverse md:flex-row items-center justify-between w-full max-w-4xl gap-8 md:gap-2 mt-8">
       <div class="flex-1 flex flex-col items-start space-y-3 md:space-y-3 mt-4">
         <div
-          class="hero-badge inline-block bg-[#f8f8f8] border border-black/20 px-3 py-1 rounded-lg shadow-sm transform -rotate-1 origin-bottom-left">
+          class="hero-badge inline-block bg-[#f8f8f8] dark:bg-white/5 border border-black/20 dark:border-white/10 px-3 py-1 rounded-lg shadow-sm transform -rotate-1 origin-bottom-left">
           <h5 class="font-bold text-[10px] md:text-xs tracking-wide uppercase">Available for Work</h5>
         </div>
 
@@ -126,13 +126,14 @@ watch(
           <h1 class="hero-text text-4xl md:text-5xl font-bold leading-tight font-[Inter] tracking-tight">
             Hi, I'm
             <br class="hidden md:block" />
-            <span class="underline decoration-4 underline-offset-4 decoration-black">{{ profile.about.name }}</span>
+            <span class="underline decoration-4 underline-offset-4 decoration-black dark:decoration-white">{{
+              profile.about.name }}</span>
           </h1>
 
           <h2
             class="hero-text text-xl md:text-2xl lg:text-3xl font-[Playfair_Display] italic text-gray-800 pt-1 min-h-[1.5em] flex items-center">
             <span>{{ displayedJob }}</span>
-            <span class="inline-block w-[2px] h-[24px] md:h-[32px] bg-black ml-1 align-middle"
+            <span class="inline-block w-[2px] h-[24px] md:h-[32px] bg-black dark:bg-white ml-1 align-middle"
               :class="{ 'opacity-0': !cursorVisible, 'opacity-100': cursorVisible }"></span>
           </h2>
         </div>
@@ -146,15 +147,15 @@ watch(
             <Icon icon="mdi:map-marker" />
             <span>Based in Indonesia</span>
           </div>
-          <div class="flex items-center gap-1.5 px-2.5 py-1 text-black">
-            <div class="w-2 h-2 bg-black rounded-full animate-pulse"></div>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 text-black dark:text-white">
+            <div class="w-2 h-2 bg-black dark:bg-white rounded-full animate-pulse"></div>
             <span>Available Now</span>
           </div>
         </div>
 
         <div class="hero-content flex gap-3 pt-1 w-full md:w-auto">
           <a href="mailto:qbdian@gmail.com?subject=Hi Gilang Abdian Anggara, I want to hire you!"
-            class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-black text-white px-0 md:px-5 py-2 rounded-xl border border-transparent font-bold text-sm shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:bg-black/90 active:scale-95 transition-all">
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-0 md:px-5 py-2 rounded-xl border border-transparent font-bold text-sm shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:bg-black/90 dark:hover:bg-gray-200 active:scale-95 transition-all">
             <Icon icon="mdi:handshake-outline" class="w-4 h-4 md:w-5 md:h-5" />
             <span>Hire Me</span>
           </a>
@@ -166,7 +167,7 @@ watch(
           </a>
         </div>
 
-        <hr class="hero-content w-full border-t border-gray-200 my-2" />
+        <hr class="hero-content w-full border-t border-black/20" />
 
         <div class="hero-content flex flex-col md:flex-row items-start md:items-center gap-2 text-xs font-bold">
           <span class="whitespace-nowrap">Follow me:</span>
