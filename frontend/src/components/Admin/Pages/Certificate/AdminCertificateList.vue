@@ -145,7 +145,7 @@ onMounted(() => {
             :class="cert.is_featured ? 'text-black fill-yellow-500 scale-110' : 'text-gray-300'" />
         </button>
         <div class="relative h-48 w-full border-2 border-black mb-4 bg-gray-100 overflow-hidden group">
-          <img :src="cert.image_url || cert.image_path" class="w-full h-full object-cover" alt="Certificate Image" />
+          <img :src="cert.image_url || cert.image_path" loading="lazy" class="w-full h-full object-cover" alt="Certificate Image" />
 
           <a v-if="cert.credential_link" :href="cert.credential_link" target="_blank"
             class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

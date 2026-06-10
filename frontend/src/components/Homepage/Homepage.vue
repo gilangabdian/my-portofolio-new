@@ -19,6 +19,7 @@ import FeaturedProject from "./Section/FeaturedProject.vue";
 import Hero from "./Section/Hero.vue";
 import Tech from "./Section/Tech.vue";
 import InitialLoadingScreen from "../InitialLoadingScreen.vue";
+import { useSWR } from "../../utils/useSWR";
 
 // Register GSAP Plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -54,78 +55,67 @@ function preloadImage(url) {
   });
 }
 
-// Fungsi Fetch Data Utama — dengan tracking persentase
+// Karena useSWR otomatis berjalan saat setup, kita jalankan langsung di sini
+const profileSWR = useSWR('cache_profile', getProfile);
+const skillSWR = useSWR('cache_skills', getSkills, []);
+const projectSWR = useSWR('cache_projects', () => getAllProjects({ featured: 1 }), []);
+const certificateSWR = useSWR('cache_certificates', () => getAllCertificates({ featured: 1 }), []);
+const experienceSWR = useSWR('cache_experiences', getAllExperiences, []);
+
+// Watcher untuk nge-track persentase dan selesainya semua fetch
+watch(
+  () => [
+    profileSWR.isLoading.value,
+    skillSWR.isLoading.value,
+    projectSWR.isLoading.value,
+    certificateSWR.isLoading.value,
+    experienceSWR.isLoading.value,
+  ],
+  (loadings) => {
+    // Hitung berapa yang sudah selesai (isLoading = false)
+    const completed = loadings.filter(l => !l).length;
+    loadingPercent.value = (completed / 5) * 100;
+
+    // Jika semuanya sudah false, berarti beres!
+    if (completed === 5) {
+      profileData.value = profileSWR.data.value;
+      skillData.value = skillSWR.data.value;
+      projectData.value = projectSWR.data.value;
+      certificateData.value = certificateSWR.data.value;
+      experienceData.value = experienceSWR.data.value;
+
+      // Preload image
+      if (profileData.value?.about?.photo_url) {
+        preloadImage(profileData.value.about.photo_url).then(() => {
+          finalizeLoading();
+        });
+      } else {
+        finalizeLoading();
+      }
+    }
+  },
+  { immediate: true } // langsung trigger sekali saat mount
+);
+
+function finalizeLoading() {
+  setTimeout(() => {
+    isLoading.value = false;
+    window.dispatchEvent(new CustomEvent("content-loaded"));
+  }, 300);
+}
+
+// Fungsi Fetch Data Utama — dipanggil oleh Try Again button
 async function fetchAllData() {
   isLoading.value = true;
   isError.value = false;
   errorMessage.value = "";
   loadingPercent.value = 0;
-
-  try {
-    // Kita track setiap fetch selesai = +16% (5 fetch x 16% = 80%)
-    const STEP = 16;
-
-    // Jalankan semua fetch secara paralel, tapi track masing-masing
-    const [profileRes, skillRes, projectRes, certificateRes, experienceRes] = await Promise.all([
-      getProfile().then((res) => {
-        loadingPercent.value += STEP;
-        return res;
-      }),
-      getSkills().then((res) => {
-        loadingPercent.value += STEP;
-        return res;
-      }),
-      getAllProjects({ featured: 1 }).then((res) => {
-        loadingPercent.value += STEP;
-        return res;
-      }),
-      getAllCertificates({ featured: 1 }).then((res) => {
-        loadingPercent.value += STEP;
-        return res;
-      }),
-      getAllExperiences().then((res) => {
-        loadingPercent.value += STEP;
-        return res;
-      }),
-    ]);
-
-    const responses = [profileRes, skillRes, projectRes, certificateRes, experienceRes];
-
-    for (const res of responses) {
-      if (!res.ok) throw new Error(`Failed to fetch data (Status: ${res.status})`);
-    }
-
-    const [profileJson, skillJson, projectJson, certificateJson, experienceJson] = await Promise.all(
-      responses.map((res) => res.json()),
-    );
-
-    profileData.value = profileJson.data || profileJson;
-    skillData.value = skillJson.data || skillJson;
-    projectData.value = projectJson.data || projectJson;
-    certificateData.value = certificateJson.data || certificateJson;
-    experienceData.value = experienceJson.data || experienceJson;
-
-    // Image preload = +15%
-    if (profileData.value?.about?.photo_url) {
-      await preloadImage(profileData.value.about.photo_url);
-    }
-    loadingPercent.value = 95;
-
-    // Final buffer = 100%
-    setTimeout(() => {
-      loadingPercent.value = 100;
-      // Sedikit delay setelah 100% agar user sempat melihat "100%"
-      setTimeout(() => {
-        isLoading.value = false;
-        window.dispatchEvent(new CustomEvent("content-loaded"));
-      }, 400);
-    }, 300);
-  } catch (e) {
-    console.error("Error loading data:", e);
-    isLoading.value = false;
-    isError.value = true;
-    errorMessage.value = "An error occurred while fetching data. Please ensure the server is running.";
-  }
+  
+  profileSWR.revalidate();
+  skillSWR.revalidate();
+  projectSWR.revalidate();
+  certificateSWR.revalidate();
+  experienceSWR.revalidate();
 }
 
 // --- 3. Fungsi Init Animasi Stacking ---

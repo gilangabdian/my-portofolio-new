@@ -28,7 +28,7 @@ defineEmits(["toggle-menu"]);
       </div>
 
       <div class="h-10 w-10 md:h-12 md:w-12 bg-gray-200 rounded-full border-2 border-black overflow-hidden shrink-0">
-        <img src="/me-fu.png" alt="Admin" class="object-cover object-top w-full h-full" />
+        <img loading="lazy" src="/me-fu.png" alt="Admin" class="object-cover object-top w-full h-full" />
       </div>
 
       <RouterLink

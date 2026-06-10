@@ -86,7 +86,7 @@ onUnmounted(() => {
           class="group flex flex-col p-3 bg-white rounded-xl border border-black/20 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer">
           <div
             class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-3 overflow-hidden relative flex items-center justify-center p-2">
-            <img :src="cert.image_url || cert.image_path" :alt="cert.title"
+            <img loading="lazy" :src="cert.image_url || cert.image_path" :alt="cert.title"
               class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
           </div>
 
@@ -153,7 +153,7 @@ onUnmounted(() => {
           <div class="p-6 overflow-y-auto custom-scrollbar" data-lenis-prevent>
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-6 overflow-hidden flex-shrink-0 flex items-center justify-center p-4">
-              <img :src="selectedCert?.image_url || selectedCert?.image_path" :alt="selectedCert?.title"
+              <img loading="lazy" :src="selectedCert?.image_url || selectedCert?.image_path" :alt="selectedCert?.title"
                 class="w-full h-full object-contain" />
             </div>
 

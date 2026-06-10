@@ -210,6 +210,7 @@ onMounted(() => {
                   class="w-full border-4 border-black bg-gray-100 flex items-center justify-center overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <img
                     v-if="photoPreview"
+                    loading="lazy"
                     :src="photoPreview"
                     class="w-full h-auto"
                     alt="Profile Preview" />
@@ -236,6 +237,7 @@ onMounted(() => {
                   <img
                     v-if="secondaryImagePreview"
                     :src="secondaryImagePreview"
+                    loading="lazy"
                     class="w-full h-full object-cover"
                     alt="Secondary Preview" />
                   <div v-else class="text-gray-400 flex flex-col items-center">

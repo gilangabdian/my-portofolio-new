@@ -6,7 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ArtworkController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ Route::get('/skills', [SkillController::class, 'index']); // Asumsi kamu buat Sk
 Route::get('/experiences', [ExperienceController::class, 'index']); // Asumsi kamu buat ExperienceController
 Route::get('/certificates', [CertificateController::class, 'index']); // Asumsi kamu buat CertificateController
 Route::get('/contacts', [ContactController::class, 'index']); // Asumsi kamu buat ContactController
-Route::get('/services', [ServiceController::class, 'index']);
+Route::get('/artworks', [ArtworkController::class, 'index']);
 
 // Show Single (Detail untuk Edit) - TAMBAHKAN INI
 Route::get('/projects/{id}', [ProjectController::class, 'show']);
@@ -39,7 +39,7 @@ Route::get('/skills/{id}', [SkillController::class, 'show']);
 Route::get('/experiences/{id}', [ExperienceController::class, 'show']);
 Route::get('/certificates/{id}', [CertificateController::class, 'show']);
 Route::get('/contacts/{id}', [ContactController::class, 'show']);
-Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::get('/artworks/{id}', [ArtworkController::class, 'show']);
 
 /*
 |--------------------------------------------------------------------------
@@ -82,8 +82,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/contacts/{id}', [ContactController::class, 'update']);
     Route::delete('/contacts/{id}', [ContactController::class, 'destroy']);
 
-    //Services CRUD
-    Route::post('/services', [ServiceController::class, 'store']);
-    Route::put('/services/{id}', [ServiceController::class, 'update']);
-    Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
+    //Artworks CRUD
+    Route::post('/artworks', [ArtworkController::class, 'store']);
+    Route::put('/artworks/{id}', [ArtworkController::class, 'update']);
+    Route::delete('/artworks/{id}', [ArtworkController::class, 'destroy']);
 });

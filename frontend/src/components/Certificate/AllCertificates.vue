@@ -4,6 +4,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { alertError } from "../../lib/alert";
 import { getAllCertificates } from "../../lib/api/CertificateApi";
+import { useSWR } from "../../utils/useSWR";
 import { Icon } from "@iconify/vue";
 import gsap from "gsap";
 import { marked } from "marked";
@@ -32,22 +33,12 @@ const formatDate = (dateStr) => {
   return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 };
 
-// --- FUNCTION FETCH DATA (Dengan Delay Buatan) ---
-async function fetchCertificates() {
-  loading.value = true;
-  // NProgress.start() is handled by router.beforeEach — no duplicate call needed
-  try {
-    const response = await getAllCertificates();
-    const responseBody = await response.json();
+// --- SWR Caching ---
+const { data: certificateSWR, isLoading: isSWRloading, revalidate } = useSWR('cache_all_certificates', getAllCertificates, []);
 
-    if (response.status === 200) {
-      certificates.value = responseBody.data || responseBody;
-    } else {
-      await alertError(responseBody.message);
-    }
-  } catch (e) {
-    console.error(`Error fetch certificates:`, e);
-  } finally {
+watch(isSWRloading, async (newVal) => {
+  if (!newVal) {
+    certificates.value = certificateSWR.value;
     NProgress.done();
     // Delay buatan 800ms agar transisi smooth
     setTimeout(() => {
@@ -55,7 +46,7 @@ async function fetchCertificates() {
       window.dispatchEvent(new CustomEvent("content-loaded"));
     }, 800);
   }
-}
+}, { immediate: true });
 
 // --- ANIMATION TRIGGER (Menggunakan Watcher) ---
 watch(loading, (newVal) => {
@@ -109,8 +100,8 @@ function closeModal() {
   }, 200);
 }
 
-onMounted(async () => {
-  await fetchCertificates();
+onMounted(() => {
+  // Data load handled by SWR watcher
 });
 </script>
 
@@ -134,7 +125,7 @@ onMounted(async () => {
           style="opacity: 0; visibility: hidden">
           <div
             class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-3 overflow-hidden relative flex items-center justify-center p-2">
-            <img :src="certificate.image_url" :alt="certificate.title"
+            <img loading="lazy" :src="certificate.image_url" :alt="certificate.title"
               class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
           </div>
 
@@ -193,7 +184,7 @@ onMounted(async () => {
           <div class="p-6 overflow-y-auto custom-scrollbar" data-lenis-prevent>
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-6 overflow-hidden flex-shrink-0 flex items-center justify-center p-4">
-              <img :src="selectedCert?.image_url" :alt="selectedCert?.title" class="w-full h-full object-contain" />
+              <img loading="lazy" :src="selectedCert?.image_url" :alt="selectedCert?.title" class="w-full h-full object-contain" />
             </div>
 
             <h4 class="font-bold font-serif uppercase text-sm mb-3 border-b border-black/20 inline-block">

@@ -13,16 +13,28 @@ const toggleDark = useToggle(isDark);
 
 const route = useRoute();
 const menus = [
-  { name: "Home", href: "/me", icon: "mdi:home-variant-outline" },
+  { name: "Home", href: "/", icon: "mdi:home-variant-outline" },
   { name: "About", href: "/about", icon: "mdi:card-account-details-outline" },
   { name: "Projects", href: "/projects", icon: "mdi:folder-outline" },
   { name: "Certificates", href: "/certificates", icon: "mdi:certificate-outline" },
-  { name: "Services", href: "/services", icon: "mdi:code-tags" },
+  { name: "Artworks", href: "/artworks", icon: "mdi:palette-outline" },
   { name: "Contacts", href: "/contacts", icon: "mdi:email-outline" },
 ];
 
 const menuContainer = ref(null);
 const navRef = ref(null);
+const isScrolledToRight = ref(false);
+
+const handleMenuScroll = (e) => {
+  const el = e.target;
+  if (!el) return;
+  // If we are within 2 pixels of the right edge, consider it fully scrolled
+  if (el.scrollWidth - Math.round(el.scrollLeft) - el.clientWidth <= 2) {
+    isScrolledToRight.value = true;
+  } else {
+    isScrolledToRight.value = false;
+  }
+};
 
 // --- Scroll Hint Animation ---
 const playScrollHint = () => {
@@ -139,6 +151,11 @@ onMounted(() => {
   // Re-check after a brief delay for any dynamic layout shifts
   setTimeout(checkFooterOverlap, 100);
   setTimeout(checkFooterOverlap, 600);
+
+  // Initial check for scroll
+  if (menuContainer.value) {
+    handleMenuScroll({ target: menuContainer.value });
+  }
 });
 
 watch(
@@ -169,7 +186,8 @@ onUnmounted(() => {
       </div>
 
       <div ref="menuContainer"
-        class="flex gap-2 items-center w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible px-1 scroll-fade min-w-0">
+        @scroll="handleMenuScroll"
+        :class="['flex gap-2 items-center w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible px-1 min-w-0 transition-all duration-300', { 'scroll-fade': !isScrolledToRight }]">
         <RouterLink v-for="item in menus" :key="item.name" :to="item.href"
           class="group flex-shrink-0 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 p-2 md:px-3 md:py-1.5 rounded-xl md:rounded-full text-[10px] md:text-sm font-bold transition-all duration-200 border border-transparent hover:border-black/20 dark:hover:border-white/20 active:scale-95 whitespace-nowrap text-gray-700 dark:text-gray-300 dark:hover:text-white"
           exact-active-class="active-nav-item bg-black text-white dark:!bg-[#ffffff] shadow-md md:shadow-none !border-transparent">

@@ -74,8 +74,8 @@
                         name: "7. Contacts"
                     },
                     {
-                        url: "{{ asset('docs/service-api.json') }}",
-                        name: "8. Services"
+                        url: "{{ asset('docs/artwork-api.json') }}",
+                        name: "Artwork API"
                     },
                     {
                         url: "{{ asset('docs/visitor-api.json') }}",

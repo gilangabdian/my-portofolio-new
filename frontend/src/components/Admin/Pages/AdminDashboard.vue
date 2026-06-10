@@ -1,20 +1,20 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { getAllProjects } from "../../../lib/api/ProjectApi";
+import { getAllArtworks } from "../../../lib/api/ArtworkApi";
 import { getAllCertificates } from "../../../lib/api/CertificateApi";
 import { getSkills } from "../../../lib/api/SkillApi";
 import { getAllContacts } from "../../../lib/api/ContactApi";
-import { getAllServices } from "../../../lib/api/ServiceApi";
 import { getVisitorCount, adminGetVisitors, adminDeleteVisitor, adminClearAllVisitors } from "../../../lib/api/VisitorApi";
 import { alertConfirmVisitor, alertConfirmClearAllVisitors, alertSuccessVisitor } from "../../../lib/alert";
 import { Icon } from "@iconify/vue";
 
 const stats = ref({
   projects: 0,
+  artworks: 0,
   certificates: 0,
   skills: 0,
   contacts: 0,
-  services: 0,
   visitors: 0,
 });
 
@@ -142,10 +142,10 @@ onMounted(async () => {
   isLoading.value = true;
   await Promise.all([
     fetchData(getAllProjects, "projects"),
+    fetchData(getAllArtworks, "artworks"),
     fetchData(getAllCertificates, "certificates"),
     fetchData(getSkills, "skills"),
     fetchData(getAllContacts, "contacts"),
-    fetchData(getAllServices, "services"),
     fetchData(getVisitorCount, "visitors"),
     fetchVisitorsList(),
   ]);
@@ -200,25 +200,25 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- Services -->
+      <!-- Artworks -->
       <div
         class="bg-white border-4 border-black p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-4px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-100 transition-all cursor-default relative overflow-hidden group">
         <div class="absolute -right-6 -top-6 opacity-10 group-hover:opacity-20 transition-opacity">
-          <Icon icon="lucide:layers" class="text-9xl" />
+          <Icon icon="lucide:palette" class="text-9xl" />
         </div>
         <div class="flex justify-between items-start relative z-10">
           <div>
-            <p class="font-black text-sm uppercase mb-1 tracking-wide bg-black text-white inline-block px-1">Services</p>
-            <h3 class="text-5xl font-black mt-2">{{ isLoading ? "..." : stats.services }}</h3>
+            <p class="font-black text-sm uppercase mb-1 tracking-wide bg-black text-white inline-block px-1">Artworks</p>
+            <h3 class="text-5xl font-black mt-2">{{ isLoading ? "..." : stats.artworks }}</h3>
           </div>
-          <div class="bg-black text-white p-2 border-2 border-black -rotate-3 group-hover:rotate-3 transition-transform">
-             <Icon icon="lucide:layers" class="text-3xl" />
+          <div class="bg-black text-white p-2 border-2 border-black rotate-2 group-hover:-rotate-3 transition-transform">
+             <Icon icon="lucide:palette" class="text-3xl" />
           </div>
         </div>
         <div
           class="mt-4 pt-4 border-t-4 border-black text-xs font-bold font-mono flex items-center gap-2 relative z-10">
-          <Icon icon="lucide:briefcase" />
-          Offered services
+          <Icon icon="lucide:image" />
+          Gallery items
         </div>
       </div>
 

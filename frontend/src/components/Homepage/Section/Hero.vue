@@ -184,7 +184,7 @@ watch(
       <div class="w-full md:w-5/12 flex justify-center md:justify-end relative hero-image">
         <div class="absolute inset-0 bg-gray-100 rounded-full scale-90 blur-3xl -z-10 opacity-50"></div>
 
-        <img :src="profile.about.photo_url" alt="Gilang Abdian"
+        <img loading="lazy" :src="profile.about.photo_url" alt="Gilang Abdian"
           class="w-[400px] md:w-[300px] -mt-32 md:mt-0 h-auto object-cover grayscale contrast-110 border-b border-black/20" />
       </div>
     </div>

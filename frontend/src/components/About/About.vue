@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getProfile } from "../../lib/api/ProfileApi";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { RouterLink } from "vue-router";
 
 // --- STATE ---
 const profile = ref({});
@@ -122,9 +123,8 @@ watch(isLoading, (newVal) => {
 
             <p>
               Outside of programming, I enjoy making <a href="https://www.youtube.com/@jeezfay" target="_blank"
-                class="hover:underline decoration-black dark:decoration-white underline-offset-4 transition-all duration-300">YouTube
-                videos</a>, playing the guitar, and finding new ways to blend technology with creativity to stay
-              inspired.
+                class="underline text-black decoration-black/20 hover:decoration-black dark:decoration-white/20 dark:hover:decoration-white underline-offset-4 transition-all duration-300">YouTube
+                videos</a>, playing the guitar, and drawing. I post my <RouterLink to="/artworks" class="underline text-black decoration-black/20 hover:decoration-black dark:decoration-white/20 dark:hover:decoration-white underline-offset-4 transition-all duration-300">drawings on this page</RouterLink>. Also, I am constantly finding new ways to blend technology with creativity to stay inspired.
             </p>
           </div>
         </div>

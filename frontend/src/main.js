@@ -17,15 +17,14 @@ import AdminUploadOrUpdateProfile from "./components/Admin/Pages/Profile/AdminUp
 import AdminCertificateList from "./components/Admin/Pages/Certificate/AdminCertificateList.vue";
 import AdminUploadOrUpdateCertificate from "./components/Admin/Pages/Certificate/AdminUploadOrUpdateCertificate.vue";
 import AdminExperienceList from "./components/Admin/Pages/Experience/AdminExperienceList.vue";
-import AdminServiceList from "./components/Admin/Pages/Service/AdminServiceList.vue";
+import AdminArtworkList from "./components/Admin/Pages/Artwork/AdminArtworkList.vue";
 import NotFound from "./components/NotFound.vue";
 import AllProjects from "./components/Project/AllProjects.vue";
 import AllCertificates from "./components/Certificate/AllCertificates.vue";
 import AllContacts from "./components/Contact/AllContacts.vue";
 import Home from "./components/LayoutHome/Home.vue";
-import AllServices from "./components/Service/AllServices.vue";
+import AllArtworks from "./components/Artwork/AllArtworks.vue";
 import About from "./components/About/About.vue";
-import Me from "./components/Me.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -41,16 +40,12 @@ const router = createRouter({
     }
   },
   routes: [
-     {
-      path: "/",
-      component: Me,
-    },
     {
-      path: "/me",
+      path: "/",
       component: Home,
       children: [
         {
-          path: "/me",
+          path: "/",
           component: Homepage,
         },
         {
@@ -66,8 +61,8 @@ const router = createRouter({
           component: AllCertificates,
         },
         {
-          path: "/services",
-          component: AllServices,
+          path: "/artworks",
+          component: AllArtworks,
         },
         {
           path: "/contacts",
@@ -146,10 +141,10 @@ const router = createRouter({
           component: AdminSkillsList,
         },
 
-        //service
+        //artworks
         {
-          path: "services",
-          component: AdminServiceList,
+          path: "artworks",
+          component: AdminArtworkList,
         },
 
         //profile

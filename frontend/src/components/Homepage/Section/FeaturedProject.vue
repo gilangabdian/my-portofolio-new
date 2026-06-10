@@ -102,7 +102,7 @@ onUnmounted(() => {
           class="group flex flex-col p-3 bg-white rounded-xl border border-black/20 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer">
           <div
             class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-3 overflow-hidden relative flex items-center justify-center">
-            <img v-if="project.thumbnail_url || project.thumbnail_path"
+            <img loading="lazy" v-if="project.thumbnail_url || project.thumbnail_path"
               :src="project.thumbnail_url || project.thumbnail_path" :alt="project.title"
               class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
             <div v-else class="flex flex-col items-center justify-center w-full h-full text-gray-400">
@@ -165,7 +165,7 @@ onUnmounted(() => {
           <div class="p-6 overflow-y-auto custom-scrollbar" data-lenis-prevent>
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-6 overflow-hidden flex-shrink-0">
-              <img :src="selectedProject?.thumbnail_url || selectedProject?.thumbnail_path"
+              <img loading="lazy" :src="selectedProject?.thumbnail_url || selectedProject?.thumbnail_path"
                 :alt="selectedProject?.title" class="w-full h-full object-cover" />
             </div>
 

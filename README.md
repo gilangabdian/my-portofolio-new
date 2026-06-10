@@ -23,7 +23,7 @@ my-portofolio-web/
 - **Homepage** — Hero section, quick highlights
 - **About** — Personal bio and overview
 - **Projects** — Filterable project showcase with live demo & GitHub links, featured badge
-- **Services** — Available services offered
+- **Artworks** — Gallery of digital art and redraws
 - **Certificates** — Academic and professional certifications
 - **Contacts** — Social media and contact links
 
@@ -37,7 +37,7 @@ Full CRUD management for all portfolio content via a private dashboard accessibl
 | **Skills** | Create / Edit / Delete, icon identifier support |
 | **Experiences** | Create / Edit / Delete, date range, description |
 | **Certificates** | Create / Edit / Delete, upload image |
-| **Services** | Create / Edit / Delete, toggle active/inactive status |
+| **Artworks** | Upload digital art images / redraws |
 | **Contacts** | Manage contact links & social media |
 | **Visitors** | View realtime visitor count |
 
@@ -136,14 +136,14 @@ All endpoints are prefixed with `/api`. The backend exposes the following routes
 - `GET /experiences` · `GET /experiences/{id}`
 - `GET /certificates` · `GET /certificates/{id}`
 - `GET /contacts` · `GET /contacts/{id}`
-- `GET /services` · `GET /services/{id}`
+- `GET /artworks` · `GET /artworks/{id}`
 - `POST /visitors`
 - `POST /admin/login`
 
 **Protected (Bearer Token required)**
 - `DELETE /admin/logout`
 - `GET /admin/visitors/count`
-- Full CRUD (`POST`, `PUT`, `DELETE`) for: `projects`, `skills`, `experiences`, `certificates`, `contacts`, `services`
+- Full CRUD (`POST`, `PUT`, `DELETE`) for: `projects`, `skills`, `experiences`, `certificates`, `contacts`, `artworks`
 - `POST /profile` (update)
 
 ---
@@ -165,7 +165,7 @@ Pipeline (`.github/workflows/ci.yml`):
 | `/` | Homepage | ❌ |
 | `/about` | About | ❌ |
 | `/projects` | AllProjects | ❌ |
-| `/services` | AllServices | ❌ |
+| `/artworks` | AllArtworks | ❌ |
 | `/certificates` | AllCertificates | ❌ |
 | `/contacts` | AllContacts | ❌ |
 | `/admin/login` | AdminLogin | Guest Only |
@@ -175,7 +175,7 @@ Pipeline (`.github/workflows/ci.yml`):
 | `/admin/dashboard/experiences` | Experience List | ✅ |
 | `/admin/dashboard/certificates` | Certificate List | ✅ |
 | `/admin/dashboard/contacts` | Contact List | ✅ |
-| `/admin/dashboard/services` | Service List | ✅ |
+| `/admin/dashboard/artworks` | Artwork List | ✅ |
 | `/admin/dashboard/profile` | Update Profile | ✅ |
 
 ---

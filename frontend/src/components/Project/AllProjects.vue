@@ -4,6 +4,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { alertError } from "../../lib/alert";
 import { getAllProjects } from "../../lib/api/ProjectApi";
+import { useSWR } from "../../utils/useSWR";
 import { Icon } from "@iconify/vue";
 import gsap from "gsap";
 import { marked } from "marked";
@@ -57,38 +58,27 @@ function preloadImage(url) {
   });
 }
 
-// --- FUNCTION FETCH DATA (Dengan Delay Buatan agar Smooth) ---
-async function fetchProjects() {
-  loading.value = true;
-  // NProgress.start() is handled by router.beforeEach — no duplicate call needed
-  try {
-    const response = await getAllProjects();
-    const responseBody = await response.json();
+// --- SWR Caching ---
+const { data: projectSWR, isLoading: isSWRloading, revalidate } = useSWR('cache_all_projects', getAllProjects, []);
 
-    if (response.status === 200) {
-      const data = responseBody.data || responseBody;
-      projects.value = data;
+watch(isSWRloading, async (newVal) => {
+  if (!newVal) {
+    projects.value = projectSWR.value;
+    
+    // Preload image
+    const imagePromises = (projects.value || [])
+      .filter(p => p.thumbnail_url)
+      .map(p => preloadImage(p.thumbnail_url));
 
-      // Tunggu hingga semua thumbnail project selesai di-load
-      const imagePromises = data
-        .filter(p => p.thumbnail_url)
-        .map(p => preloadImage(p.thumbnail_url));
-
-      await Promise.all(imagePromises);
-    } else {
-      await alertError(responseBody.message);
-    }
-  } catch (e) {
-    console.error(`Error fetch projects:`, e);
-  } finally {
+    await Promise.all(imagePromises);
+    
     NProgress.done();
-    // Gunakan delay yang lebih singkat karena kita sudah menunggu gambar selesai di-load
     setTimeout(() => {
       loading.value = false;
       window.dispatchEvent(new CustomEvent("content-loaded"));
     }, 400);
   }
-}
+}, { immediate: true });
 
 // --- ANIMATION TRIGGER (Menggunakan Watcher) ---
 watch(loading, (newVal) => {
@@ -142,8 +132,8 @@ function closeModal() {
   }, 200);
 }
 
-onMounted(async () => {
-  await fetchProjects();
+onMounted(() => {
+  // Data load handled by SWR watcher
 });
 </script>
 
@@ -168,7 +158,7 @@ onMounted(async () => {
             style="opacity: 0; visibility: hidden">
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-3 overflow-hidden relative flex items-center justify-center">
-              <img v-if="project.thumbnail_url" :src="project.thumbnail_url" :alt="project.title"
+              <img loading="lazy" v-if="project.thumbnail_url" :src="project.thumbnail_url" :alt="project.title"
                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
               <div v-else class="flex flex-col items-center justify-center w-full h-full text-gray-400">
                 <Icon icon="mdi:image-off-outline" class="text-3xl mb-2" />
@@ -224,7 +214,7 @@ onMounted(async () => {
           <div class="p-6 overflow-y-auto custom-scrollbar" data-lenis-prevent>
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-6 overflow-hidden flex-shrink-0">
-              <img v-if="selectedProject?.thumbnail_url" :src="selectedProject?.thumbnail_url"
+              <img loading="lazy" v-if="selectedProject?.thumbnail_url" :src="selectedProject?.thumbnail_url"
                 :alt="selectedProject?.title" class="w-full h-full object-cover" />
               <div v-else class="flex w-full h-full items-center justify-center text-gray-400">
                 <Icon icon="mdi:image-off-outline" class="text-4xl" />

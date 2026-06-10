@@ -360,7 +360,7 @@ const handleSubmit = async () => {
                 @change="handleFileChange" />
 
               <div v-if="previewImage" class="relative w-full h-full p-2 bg-white">
-                <img :src="previewImage" class="w-full h-full object-contain border-2 border-black" />
+                <img loading="lazy" :src="previewImage" class="w-full h-full object-contain border-2 border-black" />
                 <button
                   @click.stop="removeImage"
                   class="absolute top-0 right-0 bg-white text-black hover:bg-black hover:text-white p-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:scale-110 transition-transform z-10"

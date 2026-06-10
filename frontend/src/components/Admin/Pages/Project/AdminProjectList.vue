@@ -165,7 +165,7 @@ onMounted(() => {
             <tr v-for="project in projects" :key="project.id"
               class="border-b-2 border-black hover:bg-gray-50 transition-colors">
               <td class="p-4 align-top">
-                <img :src="project.thumbnail_url || project.thumbnail_path"
+                <img loading="lazy" :src="project.thumbnail_url || project.thumbnail_path"
                   class="w-24 h-16 object-cover border-2 border-black shadow-sm" />
               </td>
 
@@ -264,7 +264,7 @@ onMounted(() => {
           </button>
 
           <div class="flex gap-4 items-start">
-            <img :src="project.thumbnail_url || project.thumbnail_path"
+            <img loading="lazy" :src="project.thumbnail_url || project.thumbnail_path"
               class="w-20 h-20 object-cover border-2 border-black flex-shrink-0 bg-gray-100" />
             <div class="flex-1 min-w-0 pr-8">
               <h3 class="font-black text-lg uppercase leading-tight break-words">{{ project.title }}</h3>
