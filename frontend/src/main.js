@@ -165,8 +165,8 @@ const router = createRouter({
 
 // [BEST PRACTICE] Global Navigation Guard
 router.beforeEach((to, from, next) => {
-  // Mulai NProgress jika pindah rute, ATAU jika ini adalah load pertama kali (from.name belum ada)
-  if (to.path !== from.path || !from.name) {
+  // Mulai NProgress jika pindah rute, ATAU jika ini adalah load pertama kali
+  if (to.path !== from.path || from.matched.length === 0) {
     NProgress.start();
   }
   // Ambil token dari localStorage (sesuaikan key-nya dengan kode login Anda)
