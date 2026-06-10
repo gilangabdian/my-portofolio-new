@@ -101,7 +101,7 @@ function finalizeLoading() {
   setTimeout(() => {
     isLoading.value = false;
     window.dispatchEvent(new CustomEvent("content-loaded"));
-  }, 300);
+  }, 850); // Tunggu 850ms agar animasi progress bar (800ms) selesai bergerak ke 100%
 }
 
 // Fungsi Fetch Data Utama — dipanggil oleh Try Again button
@@ -192,7 +192,7 @@ watch(isLoading, (newVal) => {
 
 onMounted(() => {
   NProgress.done(); // Close the router's progress bar — Homepage uses its own InitialLoadingScreen
-  fetchAllData();
+  // fetchAllData(); <-- Dihapus! SWR sudah memanggilnya secara otomatis di setup!
   initVisitorTracking();
 });
 
