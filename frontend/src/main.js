@@ -165,7 +165,8 @@ const router = createRouter({
 
 // [BEST PRACTICE] Global Navigation Guard
 router.beforeEach((to, from, next) => {
-  if (to.path !== "/" && to.path !== from.path) {
+  // Mulai NProgress jika pindah rute, ATAU jika ini adalah load pertama kali (from.name belum ada)
+  if (to.path !== from.path || !from.name) {
     NProgress.start();
   }
   // Ambil token dari localStorage (sesuaikan key-nya dengan kode login Anda)
@@ -200,7 +201,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   // Public page components (About, Projects, etc.) call NProgress.done() after their data fetch.
   // Admin pages don't manage NProgress themselves, so close it immediately for them.
-  if (to.path.startsWith("/admin") || to.path === "/") {
+  if (to.path.startsWith("/admin")) {
     NProgress.done();
   }
   // Only execute scroll jump if the route actually changed (avoids triggering on modal pushState/popState)

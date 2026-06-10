@@ -25,6 +25,7 @@ import { useSWR } from "../../utils/useSWR";
 gsap.registerPlugin(ScrollTrigger);
 
 // State Management
+const hasSeenIntro = ref(sessionStorage.getItem('has_seen_intro') === 'true');
 const isLoading = ref(true);
 const isError = ref(false);
 const errorMessage = ref("");
@@ -74,7 +75,16 @@ watch(
   (loadings) => {
     // Hitung berapa yang sudah selesai (isLoading = false)
     const completed = loadings.filter(l => !l).length;
-    loadingPercent.value = (completed / 5) * 100;
+    
+    // [OPSI B] Jika ini kunjungan pertama (tab baru) dan semua data instant (SWR Cache),
+    // kita tahan angkanya di 0 dulu sesaat, lalu tembak ke 100 agar animasinya jalan mulus!
+    if (!hasSeenIntro.value && completed === 5 && loadingPercent.value === 0) {
+      setTimeout(() => {
+        loadingPercent.value = 100;
+      }, 50); // Jeda sangat singkat untuk memicu CSS transition
+    } else {
+      loadingPercent.value = (completed / 5) * 100;
+    }
 
     // Jika semuanya sudah false, berarti beres!
     if (completed === 5) {
@@ -84,8 +94,8 @@ watch(
       certificateData.value = certificateSWR.data.value;
       experienceData.value = experienceSWR.data.value;
 
-      // Preload image
-      if (profileData.value?.about?.photo_url) {
+      // Preload image HANYA JIKA ini kunjungan pertama (belum lihat intro)
+      if (profileData.value?.about?.photo_url && !hasSeenIntro.value) {
         preloadImage(profileData.value.about.photo_url).then(() => {
           finalizeLoading();
         });
@@ -98,10 +108,20 @@ watch(
 );
 
 function finalizeLoading() {
-  setTimeout(() => {
+  if (hasSeenIntro.value) {
+    // Jika sudah pernah melihat intro di sesi ini, lewati delay dan selesaikan NProgress seketika!
+    NProgress.done();
     isLoading.value = false;
     window.dispatchEvent(new CustomEvent("content-loaded"));
-  }, 300);
+  } else {
+    // Kunjungan pertama di sesi ini: putar animasi full
+    setTimeout(() => {
+      isLoading.value = false;
+      sessionStorage.setItem('has_seen_intro', 'true'); // Tandai sudah melihat
+      hasSeenIntro.value = true; // Update state reaktif
+      window.dispatchEvent(new CustomEvent("content-loaded"));
+    }, 850); // Tunggu 850ms agar animasi progress bar (800ms) selesai
+  }
 }
 
 // Fungsi Fetch Data Utama — dipanggil oleh Try Again button
@@ -191,8 +211,11 @@ watch(isLoading, (newVal) => {
 });
 
 onMounted(() => {
-  NProgress.done(); // Close the router's progress bar — Homepage uses its own InitialLoadingScreen
-  fetchAllData();
+  if (!hasSeenIntro.value) {
+    // Jika ini kunjungan pertama, matikan NProgress bar biru karena kita pakai InitialLoadingScreen sendiri
+    NProgress.done(); 
+  }
+  // fetchAllData(); <-- Dihapus! SWR sudah memanggilnya secara otomatis di setup!
   initVisitorTracking();
 });
 
@@ -209,7 +232,7 @@ onUnmounted(() => {
   <div
     class="min-h-screen bg-white text-black font-sans overflow-x-hidden flex flex-col pb-24 md:pb-0">
     <Transition name="fade">
-      <InitialLoadingScreen v-if="isLoading" :percent="loadingPercent" />
+      <InitialLoadingScreen v-if="isLoading && !hasSeenIntro" :percent="loadingPercent" />
     </Transition>
 
     <div

@@ -65,7 +65,7 @@ onMounted(() => {
     <!-- Static padding wrapper for headers/controls to prevent jumping -->
     <div class="max-w-7xl mx-auto px-4 pb-4 md:px-16 lg:px-7">
     <!-- Empty State -->
-    <div v-if="!isLoading && artworks.length === 0" class="text-center font-mono text-gray-500 py-12">
+    <div v-if="!isLoading && artworks.length === 0" class="text-center font-sans text-neutral-500 py-12">
       No artworks found.
     </div>
 
