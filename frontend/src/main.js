@@ -27,6 +27,10 @@ import Home from "./components/LayoutHome/Home.vue";
 import AllArtworks from "./components/Artwork/AllArtworks.vue";
 import AllPhotos from "./components/Photo/AllPhotos.vue";
 import About from "./components/About/About.vue";
+import AllBlogs from "./components/Blog/AllBlogs.vue";
+import SingleBlog from "./components/Blog/SingleBlog.vue";
+import AdminBlogList from "./components/Admin/Pages/Blog/AdminBlogList.vue";
+import AdminUploadOrUpdateBlog from "./components/Admin/Pages/Blog/AdminUploadOrUpdateBlog.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -37,8 +41,8 @@ const router = createRouter({
       return savedPosition;
     } else {
       // Jika navigasi baru (pindah menu navbar), paksa scroll ke paling atas
-      // Native smooth scroll conflicts with Lenis custom scroll hijacking.
-      return { top: 0 };
+      // Gunakan behavior smooth karena sekarang kita memakai native scroll
+      return { top: 0, behavior: "smooth" };
     }
   },
   routes: [
@@ -53,6 +57,14 @@ const router = createRouter({
         {
           path: "/about",
           component: About,
+        },
+        {
+          path: "/blogs",
+          component: AllBlogs,
+        },
+        {
+          path: "/blogs/:slug",
+          component: SingleBlog,
         },
         {
           path: "/projects",
@@ -161,6 +173,19 @@ const router = createRouter({
           path: "profile",
           component: AdminUploadOrUpdateProfile,
         },
+        //blogs
+        {
+          path: "blogs",
+          component: AdminBlogList,
+        },
+        {
+          path: "blogs/form",
+          component: AdminUploadOrUpdateBlog,
+        },
+        {
+          path: "blogs/form/:id",
+          component: AdminUploadOrUpdateBlog,
+        },
       ],
     },
 
@@ -217,18 +242,6 @@ router.afterEach((to, from) => {
   if (to.path !== from.path) {
     // Reset window position manually just in case
     window.scrollTo(0, 0);
-
-    // If Lenis is instantiated globally, instantly teleport it to 0 otherwise it will resume its inertia from the previous page
-    if (window.lenis) {
-      window.lenis.scrollTo(0, { immediate: true });
-
-      // FIX ADMIN SCROLL: Stop lenis from intercepting scroll if we are in admin
-      if (to.path.startsWith("/admin")) {
-        window.lenis.stop();
-      } else {
-        window.lenis.start();
-      }
-    }
   }
 });
 

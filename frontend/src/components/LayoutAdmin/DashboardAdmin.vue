@@ -17,7 +17,7 @@ const closeMobileSidebar = () => {
 </script>
 
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-gray-50 text-black font-sans relative">
+  <div class="flex h-[100dvh] w-screen overflow-hidden bg-gray-50 text-black font-sans relative">
     <div
       v-if="isMobileSidebarOpen"
       @click="closeMobileSidebar"
@@ -28,7 +28,7 @@ const closeMobileSidebar = () => {
     <div class="flex flex-col flex-1 min-w-0 overflow-hidden relative">
       <NavbarAdmin @toggle-menu="toggleMobileSidebar" />
 
-      <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50" data-lenis-prevent>
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
         <RouterView />
       </main>
 

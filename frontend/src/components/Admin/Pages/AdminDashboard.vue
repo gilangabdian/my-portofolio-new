@@ -5,6 +5,8 @@ import { getAllArtworks } from "../../../lib/api/ArtworkApi";
 import { getAllCertificates } from "../../../lib/api/CertificateApi";
 import { getSkills } from "../../../lib/api/SkillApi";
 import { getAllContacts } from "../../../lib/api/ContactApi";
+import { getAllPhotos } from "../../../lib/api/PhotoApi";
+import { getAllBlogsAdmin } from "../../../lib/api/BlogApi";
 import { getVisitorCount, adminGetVisitors, adminDeleteVisitor, adminClearAllVisitors } from "../../../lib/api/VisitorApi";
 import { alertConfirmVisitor, alertConfirmClearAllVisitors, alertSuccessVisitor } from "../../../lib/alert";
 import { Icon } from "@iconify/vue";
@@ -16,6 +18,8 @@ const stats = ref({
   skills: 0,
   contacts: 0,
   visitors: 0,
+  photos: 0,
+  blogs: 0,
 });
 
 const visitorsList = ref([]);
@@ -146,6 +150,8 @@ onMounted(async () => {
     fetchData(getAllCertificates, "certificates"),
     fetchData(getSkills, "skills"),
     fetchData(getAllContacts, "contacts"),
+    fetchData(getAllPhotos, "photos"),
+    fetchData(getAllBlogsAdmin, "blogs"),
     fetchData(getVisitorCount, "visitors"),
     fetchVisitorsList(),
   ]);
@@ -241,6 +247,50 @@ onUnmounted(() => {
           class="mt-4 pt-4 border-t-4 border-black text-xs font-bold font-mono flex items-center gap-2 relative z-10">
           <Icon icon="lucide:check-circle" />
           Valid credentials
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div
+        class="bg-white border-4 border-black p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-4px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-100 transition-all cursor-default relative overflow-hidden group">
+        <div class="absolute -right-6 -top-6 opacity-10 group-hover:opacity-20 transition-opacity">
+          <Icon icon="ri:camera-3-line" class="text-9xl" />
+        </div>
+        <div class="flex justify-between items-start relative z-10">
+          <div>
+            <p class="font-black text-sm uppercase mb-1 tracking-wide bg-black text-white inline-block px-1">Photos</p>
+            <h3 class="text-5xl font-black mt-2">{{ isLoading ? "..." : stats.photos }}</h3>
+          </div>
+          <div class="bg-black text-white p-2 border-2 border-black rotate-2 group-hover:rotate-6 transition-transform">
+             <Icon icon="ri:camera-3-line" class="text-3xl" />
+          </div>
+        </div>
+        <div
+          class="mt-4 pt-4 border-t-4 border-black text-xs font-bold font-mono flex items-center gap-2 relative z-10">
+          <Icon icon="lucide:image" />
+          Photographic memories
+        </div>
+      </div>
+
+      <!-- Blogs -->
+      <div
+        class="bg-white border-4 border-black p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-4px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-100 transition-all cursor-default relative overflow-hidden group">
+        <div class="absolute -right-6 -top-6 opacity-10 group-hover:opacity-20 transition-opacity">
+          <Icon icon="material-symbols-light:post-outline" class="text-9xl" />
+        </div>
+        <div class="flex justify-between items-start relative z-10">
+          <div>
+            <p class="font-black text-sm uppercase mb-1 tracking-wide bg-black text-white inline-block px-1">Blogs</p>
+            <h3 class="text-5xl font-black mt-2">{{ isLoading ? "..." : stats.blogs }}</h3>
+          </div>
+          <div class="bg-black text-white p-2 border-2 border-black -rotate-3 group-hover:-rotate-6 transition-transform">
+             <Icon icon="material-symbols-light:post-outline" class="text-3xl" />
+          </div>
+        </div>
+        <div
+          class="mt-4 pt-4 border-t-4 border-black text-xs font-bold font-mono flex items-center gap-2 relative z-10">
+          <Icon icon="lucide:file-text" />
+          Articles & Stories
         </div>
       </div>
 

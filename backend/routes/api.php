@@ -10,6 +10,7 @@ use App\Http\Controllers\ArtworkController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\BlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,8 @@ Route::get('/certificates', [CertificateController::class, 'index']); // Asumsi 
 Route::get('/contacts', [ContactController::class, 'index']); // Asumsi kamu buat ContactController
 Route::get('/artworks', [ArtworkController::class, 'index']);
 Route::get('/photos', [PhotoController::class, 'index']);
+Route::get('/blogs', [BlogController::class, 'indexPublic']);
+Route::get('/blogs/{slug}', [BlogController::class, 'showPublic']);
 
 // Show Single (Detail untuk Edit) - TAMBAHKAN INI
 Route::get('/projects/{id}', [ProjectController::class, 'show']);
@@ -94,4 +97,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/photos', [PhotoController::class, 'store']);
     Route::post('/photos/{id}', [PhotoController::class, 'update']);
     Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
+
+    // Blogs CRUD
+    Route::get('/admin/blogs', [BlogController::class, 'indexAdmin']);
+    Route::get('/admin/blogs/{id}', [BlogController::class, 'showAdmin']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::post('/blogs/upload-image', [BlogController::class, 'uploadImage']);
+    Route::put('/blogs/{id}', [BlogController::class, 'update']);
+    Route::post('/blogs/{id}', [BlogController::class, 'update']); // Fallback multipart if needed
+    Route::delete('/blogs/{id}', [BlogController::class, 'destroy']);
 });

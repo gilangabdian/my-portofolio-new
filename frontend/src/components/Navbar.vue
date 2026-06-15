@@ -15,6 +15,7 @@ const route = useRoute();
 const menus = [
   { name: "Home", href: "/", icon: "mdi:home-variant-outline" },
   { name: "About", href: "/about", icon: "mdi:card-account-details-outline" },
+  { name: "Blogs", href: "/blogs", icon: "material-symbols-light:post-outline" },
   { name: "Projects", href: "/projects", icon: "mdi:folder-outline" },
   { name: "Certificates", href: "/certificates", icon: "mdi:certificate-outline" },
   { name: "Artworks", href: "/artworks", icon: "mdi:palette-outline" },

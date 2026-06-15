@@ -162,7 +162,7 @@ onUnmounted(() => {
             </button>
           </div>
 
-          <div class="p-6 overflow-y-auto custom-scrollbar" data-lenis-prevent>
+          <div class="p-6 overflow-y-auto custom-scrollbar">
             <div
               class="w-full aspect-video bg-gray-50 border border-black/10 rounded-lg mb-6 overflow-hidden flex-shrink-0">
               <img loading="lazy" :src="selectedProject?.thumbnail_url || selectedProject?.thumbnail_path"

@@ -28,6 +28,7 @@ const menuItems = [
   { name: "Skills", icon: "lucide:zap", route: "/admin/dashboard/skills" },
   { name: "Artworks", icon: "lucide:palette", route: "/admin/dashboard/artworks" },
   { name: "Photos", icon: "ri:camera-3-line", route: "/admin/dashboard/photos" },
+  { name: "Blogs", icon: "material-symbols-light:post-outline", route: "/admin/dashboard/blogs" },
   { name: "Contacts", icon: "lucide:share-2", route: "/admin/dashboard/contacts" },
 ];
 
@@ -94,7 +95,7 @@ const computedSidebarStyle = computed(() => {
 
 <template>
   <aside
-    class="fixed inset-y-0 left-0 z-50 bg-white border-r-4 border-black md:relative"
+    class="fixed md:sticky top-0 left-0 z-50 bg-white border-r-4 border-black flex flex-col h-[100dvh]"
     :class="[
       props.isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       isResizing ? 'transition-none' : 'transition-[width,transform] duration-300 ease-in-out',
@@ -115,7 +116,7 @@ const computedSidebarStyle = computed(() => {
       </button>
     </div>
 
-    <nav class="flex-1 overflow-y-auto p-2 space-y-2" data-lenis-prevent>
+    <nav class="flex-1 overflow-y-auto p-2 space-y-2">
       <router-link
         v-for="item in menuItems"
         :key="item.name"
