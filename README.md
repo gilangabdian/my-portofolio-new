@@ -25,6 +25,7 @@ my-portofolio-web/
 - **Projects** — Filterable project showcase with live demo & GitHub links, featured badge
 - **Artworks** — Gallery of digital art and redraws
 - **Certificates** — Academic and professional certifications
+- **Blog** — Articles, tutorials, and project updates
 - **Contacts** — Social media and contact links
 
 ### 🔐 Admin Panel (Protected)
@@ -38,6 +39,7 @@ Full CRUD management for all portfolio content via a private dashboard accessibl
 | **Experiences** | Create / Edit / Delete, date range, description |
 | **Certificates** | Create / Edit / Delete, upload image |
 | **Artworks** | Upload digital art images / redraws |
+| **Blogs** | Create / Edit / Delete, Tiptap rich-text editor |
 | **Contacts** | Manage contact links & social media |
 | **Visitors** | View realtime visitor count |
 
@@ -57,7 +59,7 @@ Authentication is token-based using **Laravel Sanctum**. The frontend stores the
 | [GSAP](https://gsap.com/) | Scroll and entrance animations |
 | [Iconify for Vue](https://iconify.design/) | Icon library |
 | [SweetAlert2](https://sweetalert2.github.io/) | Stylish dialog & toast notifications |
-| [marked](https://marked.js.org/) | Markdown rendering |
+| [Tiptap](https://tiptap.dev/) | Rich-text headless editor |
 | [@vueuse/core](https://vueuse.org/) | Composition utility helpers |
 
 ### Backend
@@ -137,13 +139,14 @@ All endpoints are prefixed with `/api`. The backend exposes the following routes
 - `GET /certificates` · `GET /certificates/{id}`
 - `GET /contacts` · `GET /contacts/{id}`
 - `GET /artworks` · `GET /artworks/{id}`
+- `GET /blogs` · `GET /blogs/{slug}`
 - `POST /visitors`
 - `POST /admin/login`
 
 **Protected (Bearer Token required)**
 - `DELETE /admin/logout`
 - `GET /admin/visitors/count`
-- Full CRUD (`POST`, `PUT`, `DELETE`) for: `projects`, `skills`, `experiences`, `certificates`, `contacts`, `artworks`
+- Full CRUD (`POST`, `PUT`, `DELETE`) for: `projects`, `skills`, `experiences`, `certificates`, `contacts`, `artworks`, `blogs`
 - `POST /profile` (update)
 
 ---
