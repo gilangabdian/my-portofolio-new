@@ -25,3 +25,6 @@ dist-ssr
 
 #cache
 .vite/*
+node_modules
+.env
+tina/__generated__
