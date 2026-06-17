@@ -6,7 +6,7 @@ import { useRoute } from "vue-router";
 import { useDark, useToggle } from "@vueuse/core";
 
 const isDark = useDark();
-if (localStorage.getItem('vueuse-color-scheme') === null) {
+if (localStorage.getItem("vueuse-color-scheme") === null) {
   isDark.value = true; // Default to dark theme
 }
 const toggleDark = useToggle(isDark);
@@ -84,7 +84,7 @@ const checkFooterOverlap = () => {
       left: "50%",
       duration: 0.3,
       overwrite: "auto",
-      ease: "power2.out"
+      ease: "power2.out",
     });
   } else {
     const navBottom = 16 + navHeight;
@@ -94,7 +94,7 @@ const checkFooterOverlap = () => {
         y: -pushAmount,
         xPercent: -50,
         left: "50%",
-        force3D: true
+        force3D: true,
       });
     } else {
       gsap.to(navEl, {
@@ -103,7 +103,7 @@ const checkFooterOverlap = () => {
         left: "50%",
         duration: 0.3,
         overwrite: "auto",
-        ease: "power2.out"
+        ease: "power2.out",
       });
     }
   }
@@ -117,20 +117,20 @@ const onScroll = () => {
 const resetNavbarPosition = () => {
   if (navRef.value) {
     gsap.killTweensOf(navRef.value);
-    // Use clearProps sparingly, better to set explicit values
+    // Use clearProps sparingly, better to set explicit values.
     gsap.set(navRef.value, {
       y: 0,
       xPercent: -50,
       left: "50%",
       x: 0,
-      clearProps: "transform" // Optional: clean slate
+      clearProps: "transform", // Optional: clean slate
     });
     // Re-set immediately to ensure GSAP internal state is correct
     gsap.set(navRef.value, {
       y: 0,
       xPercent: -50,
       left: "50%",
-      x: 0
+      x: 0,
     });
   }
 };
@@ -187,10 +187,17 @@ onUnmounted(() => {
         A
       </div>
 
-      <div ref="menuContainer"
+      <div
+        ref="menuContainer"
         @scroll="handleMenuScroll"
-        :class="['flex gap-2 items-center w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible px-1 min-w-0 transition-all duration-300', { 'scroll-fade': !isScrolledToRight }]">
-        <RouterLink v-for="item in menus" :key="item.name" :to="item.href"
+        :class="[
+          'flex gap-2 items-center w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible px-1 min-w-0 transition-all duration-300',
+          { 'scroll-fade': !isScrolledToRight },
+        ]">
+        <RouterLink
+          v-for="item in menus"
+          :key="item.name"
+          :to="item.href"
           class="group flex-shrink-0 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-1.5 p-2 md:px-3 md:py-1.5 rounded-xl md:rounded-full text-[10px] md:text-sm font-bold transition-all duration-200 border border-transparent hover:border-black/20 dark:hover:border-white/20 active:scale-95 whitespace-nowrap text-gray-700 dark:text-gray-300 dark:hover:text-white"
           exact-active-class="active-nav-item bg-black text-white dark:!bg-[#ffffff] shadow-md md:shadow-none !border-transparent">
           <Icon :icon="item.icon" class="w-5 h-5 md:w-4 md:h-4 transition-transform group-hover:scale-110" />
@@ -202,7 +209,9 @@ onUnmounted(() => {
 
       <!-- Theme Toggle -->
       <div class="border-l border-black/20 dark:border-white/20 pl-2 ml-1 md:pl-4 md:ml-2 flex-shrink-0">
-        <button @click="toggleDark()" :title="isDark ? 'Switch to light theme' : 'Switch to dark theme'"
+        <button
+          @click="toggleDark()"
+          :title="isDark ? 'Switch to light theme' : 'Switch to dark theme'"
           class="cursor-pointer flex items-center justify-center p-2 rounded-full transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 dark:hover:text-white active:scale-95">
           <Icon :icon="isDark ? 'lucide:sun' : 'si:moon-line'" class="w-5 h-5 md:w-4 md:h-4" />
         </button>
@@ -225,8 +234,6 @@ html:not(.dark) .router-link-exact-active svg {
   color: white !important;
   opacity: 1 !important;
 }
-
-
 
 @media (max-width: 768px) {
   .scroll-fade {
