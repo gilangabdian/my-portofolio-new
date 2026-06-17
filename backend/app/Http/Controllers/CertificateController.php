@@ -34,7 +34,11 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('certificates');
+            if (config('filesystems.default') === 'cloudinary') {
+                $data['image_path'] = $request->file('image')->storeOnCloudinary('certificates')->getSecurePath();
+            } else {
+                $data['image_path'] = $request->file('image')->store('certificates', 'public');
+            }
         }
 
         $certificate = Certificate::create($data);
@@ -51,11 +55,15 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            // Hapus file lama jika ada
-            if ($certificate->image_path) {
-                Storage::delete($certificate->image_path);
+            // Hapus file lama jika ada (hanya jika tersimpan di disk lokal)
+            if ($certificate->image_path && !str_starts_with($certificate->image_path, 'http')) {
+                Storage::disk('public')->delete($certificate->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('certificates');
+            if (config('filesystems.default') === 'cloudinary') {
+                $data['image_path'] = $request->file('image')->storeOnCloudinary('certificates')->getSecurePath();
+            } else {
+                $data['image_path'] = $request->file('image')->store('certificates', 'public');
+            }
         }
 
         $certificate->update($data);
@@ -76,8 +84,8 @@ class CertificateController extends Controller
     {
         $certificate = Certificate::findOrFail($id);
 
-        if ($certificate->image_path) {
-            Storage::delete($certificate->image_path);
+        if ($certificate->image_path && !str_starts_with($certificate->image_path, 'http')) {
+            Storage::disk('public')->delete($certificate->image_path);
         }
 
         $certificate->delete();

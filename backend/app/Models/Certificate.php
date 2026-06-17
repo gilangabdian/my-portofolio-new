@@ -22,6 +22,16 @@ class Certificate extends Model
 
     protected function getImageUrlAttribute()
     {
-        return $this->image_path ? Storage::url($this->image_path) : null;
+        if (!$this->image_path) {
+            return null;
+        }
+
+        // Jika path sudah berupa URL utuh (seperti dari Cloudinary), gunakan langsung
+        if (str_starts_with($this->image_path, 'http')) {
+            return $this->image_path;
+        }
+
+        // Jika bukan URL utuh, ambil dari local storage
+        return Storage::disk('public')->url($this->image_path);
     }
 }

@@ -38,7 +38,11 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail_path'] = $request->file('thumbnail')->store('projects');
+            if (config('filesystems.default') === 'cloudinary') {
+                $data['thumbnail_path'] = $request->file('thumbnail')->storeOnCloudinary('projects')->getSecurePath();
+            } else {
+                $data['thumbnail_path'] = $request->file('thumbnail')->store('projects', 'public');
+            }
         }
 
         $project = Project::create($data);
@@ -56,10 +60,14 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            if ($project->thumbnail_path) {
-                Storage::delete($project->thumbnail_path);
+            if ($project->thumbnail_path && !str_starts_with($project->thumbnail_path, 'http')) {
+                Storage::disk('public')->delete($project->thumbnail_path);
             }
-            $data['thumbnail_path'] = $request->file('thumbnail')->store('projects');
+            if (config('filesystems.default') === 'cloudinary') {
+                $data['thumbnail_path'] = $request->file('thumbnail')->storeOnCloudinary('projects')->getSecurePath();
+            } else {
+                $data['thumbnail_path'] = $request->file('thumbnail')->store('projects', 'public');
+            }
         }
 
         $project->update([
@@ -90,8 +98,8 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         $project = Project::findOrFail($id);
-        if ($project->thumbnail_path) {
-            Storage::delete($project->thumbnail_path);
+        if ($project->thumbnail_path && !str_starts_with($project->thumbnail_path, 'http')) {
+            Storage::disk('public')->delete($project->thumbnail_path);
         }
         $project->delete();
         return response()->json(['message' => 'Project deleted']);

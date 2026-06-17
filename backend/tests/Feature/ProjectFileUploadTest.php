@@ -19,12 +19,12 @@ class ProjectFileUploadTest extends TestCase
     {
         parent::setUp();
 
-        // 1. Kita paksa aplikasi menganggap Default Disk adalah 'cloudinary'
-        //    Ini mensimulasikan kondisi environment Production di Render
-        Config::set('filesystems.default', 'cloudinary');
+        // 1. Kita paksa aplikasi menganggap Default Disk adalah 'public'
+        //    Ini mensimulasikan kondisi environment Lokal / Testing
+        Config::set('filesystems.default', 'public');
 
-        // 2. Kita palsukan disk 'cloudinary' agar tidak upload beneran ke internet
-        Storage::fake('cloudinary');
+        // 2. Kita palsukan disk 'public'
+        Storage::fake('public');
     }
 
     public function test_project_upload_stores_file_correctly()
@@ -47,9 +47,9 @@ class ProjectFileUploadTest extends TestCase
 
         $project = Project::first();
 
-        // Assert file ada di disk cloudinary (yang sudah dipalsukan)
+        // Assert file ada di disk public (yang sudah dipalsukan)
         $this->assertNotNull($project->thumbnail_path);
-        Storage::disk('cloudinary')->assertExists($project->thumbnail_path);
+        Storage::disk('public')->assertExists($project->thumbnail_path);
     }
 
     public function test_updating_project_image_replaces_old_file()
@@ -70,7 +70,7 @@ class ProjectFileUploadTest extends TestCase
 
         $project = Project::first();
         $oldPath = $project->thumbnail_path;
-        Storage::disk('cloudinary')->assertExists($oldPath);
+        Storage::disk('public')->assertExists($oldPath);
 
         // 2. Update
         $newFile = UploadedFile::fake()->image('new.jpg');
@@ -87,8 +87,8 @@ class ProjectFileUploadTest extends TestCase
         $newPath = $project->thumbnail_path;
 
         // Cek file lama hilang, file baru ada
-        Storage::disk('cloudinary')->assertMissing($oldPath);
-        Storage::disk('cloudinary')->assertExists($newPath);
+        Storage::disk('public')->assertMissing($oldPath);
+        Storage::disk('public')->assertExists($newPath);
     }
 
     public function test_deleting_project_removes_file()
@@ -111,6 +111,6 @@ class ProjectFileUploadTest extends TestCase
 
         $this->deleteJson("/api/projects/{$project->id}");
 
-        Storage::disk('cloudinary')->assertMissing($path);
+        Storage::disk('public')->assertMissing($path);
     }
 }
