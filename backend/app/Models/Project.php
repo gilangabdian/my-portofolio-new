@@ -30,6 +30,16 @@ class Project extends Model
     // Accessor untuk thumbnail_url
     protected function getThumbnailUrlAttribute()
     {
-        return $this->thumbnail_path ? Storage::url($this->thumbnail_path) : null;
+        if (!$this->thumbnail_path) {
+            return null;
+        }
+
+        // Jika path sudah berupa URL utuh (seperti dari Cloudinary), gunakan langsung
+        if (str_starts_with($this->thumbnail_path, 'http')) {
+            return $this->thumbnail_path;
+        }
+
+        // Jika bukan URL utuh, ambil dari local storage
+        return Storage::disk('public')->url($this->thumbnail_path);
     }
 }
