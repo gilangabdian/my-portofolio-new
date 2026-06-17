@@ -7,69 +7,13 @@ use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
 use Illuminate\Http\Request;
-use Cloudinary\Configuration\Configuration;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class BlogController extends Controller
 {
-    private function initCloudinary()
-    {
-        Configuration::instance([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-            'url' => [
-                'secure' => true,
-            ],
-        ]);
-    }
-
-    private function resolveUrl($path)
-    {
-        if (empty($path)) return null;
-        if (str_starts_with($path, 'http')) {
-            return $path;
-        }
-        return url(Storage::url($path));
-    }
-
-    private function handleFileUpload($file, $folder, $oldPath, $disk, $uploadApi)
-    {
-        // Delete old file if exists
-        if ($oldPath) {
-            if ($disk === 'cloudinary' && str_starts_with($oldPath, 'http')) {
-                // Extract public ID from Cloudinary URL
-                preg_match('/upload\/(?:v\d+\/)?([^\.]+)/', $oldPath, $matches);
-                if (isset($matches[1])) {
-                    try {
-                        $uploadApi->destroy($matches[1]);
-                    } catch (\Exception $e) {
-                        Log::error('Cloudinary delete failed: ' . $e->getMessage());
-                    }
-                }
-            } elseif ($disk === 'local' && !str_starts_with($oldPath, 'http')) {
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-            }
-        }
-
-        // Upload new file
-        if ($disk === 'cloudinary') {
-            $result = $uploadApi->upload($file->getRealPath(), [
-                'folder' => $folder,
-                'resource_type' => 'image',
-                'access_mode' => 'public',
-                'overwrite' => true,
-            ]);
-            return $result['secure_url'];
-        }
-
-        return $file->store($folder, 'public');
-    }
+    use ImageUploadTrait;
 
     // PUBLIK
     public function indexPublic()
@@ -139,20 +83,9 @@ class BlogController extends Controller
             'image' => 'required|image|max:5120' // max 5MB
         ]);
 
-        $disk = config('filesystems.default', 'local');
-        $uploadApi = null;
-
-        if ($disk === 'cloudinary') {
-            $this->initCloudinary();
-            $uploadApi = new \Cloudinary\Api\Upload\UploadApi();
-        }
-
         $imageUrl = $this->handleFileUpload(
             $request->file('image'),
-            'blogs_inline', // folder
-            null,
-            $disk,
-            $uploadApi
+            'blogs_inline'
         );
 
         $finalUrl = $this->resolveUrl($imageUrl);
@@ -160,5 +93,14 @@ class BlogController extends Controller
         return response()->json([
             'url' => $finalUrl
         ]);
+    }
+
+    private function resolveUrl($path)
+    {
+        if (empty($path)) return null;
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+        return url(Storage::url($path));
     }
 }

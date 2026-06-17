@@ -73,6 +73,9 @@ Authentication is token-based using **Laravel Sanctum**. The frontend stores the
 | [SQLite](https://www.sqlite.org/) | Testing database |
 | [PHPUnit](https://phpunit.de/) | Automated testing |
 
+### 🖼️ Image Upload Architecture
+The backend uses a centralized `ImageUploadTrait` that dynamically switches between local (`public` disk) and production (`cloudinary` disk) environments based on the `FILESYSTEM_DISK` environment variable. When using Cloudinary, all uploaded images are automatically injected with `/upload/f_auto,q_auto/` parameters to serve modern, optimized formats (like WebP and AVIF) without modifying the original uploaded files.
+
 ---
 
 ## 📬 Want to Collaborate or Have Questions?

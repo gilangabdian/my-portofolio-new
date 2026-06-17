@@ -6,9 +6,11 @@ use App\Http\Requests\StoreSkillRequest;
 use App\Http\Requests\UpdateSkillRequest;
 use App\Models\Skill;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class SkillController extends Controller
 {
+    use ImageUploadTrait;
     public function index()
     {
         return response()->json(Skill::all());
@@ -35,12 +37,11 @@ class SkillController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('icon')) {
-            // Hapus icon lama
-            if ($skill->icon_path) {
-                Storage::disk('public')->delete($skill->icon_path);
-            }
-
-            $data['icon_path'] = $request->file('icon')->store('skills', 'public');
+            $data['icon_path'] = $this->handleFileUpload(
+                $request->file('icon'),
+                'skills',
+                $skill->icon_path
+            );
         }
 
         $skill->update($data);
@@ -56,9 +57,7 @@ class SkillController extends Controller
     public function destroy($id)
     {
         $skill = Skill::findOrFail($id);
-        if ($skill->icon_path) {
-            Storage::disk('public')->delete($skill->icon_path);
-        }
+        $this->deleteFile($skill->icon_path);
 
         $skill->delete();
 

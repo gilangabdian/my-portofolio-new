@@ -6,25 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Contact;
 use App\Models\Profile;
-use Cloudinary\Configuration\Configuration;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    private function initCloudinary()
-    {
-        Configuration::instance([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-            'url' => [
-                'secure' => true,
-            ],
-        ]);
-    }
+    use ImageUploadTrait;
 
     public function update(UpdateProfileRequest $request)
     {
@@ -36,14 +24,7 @@ class ProfileController extends Controller
         // Ini TIDAK menyimpan ke DB dulu, jadi aman dari error "Field 'name' doesn't have a default value"
         $profile = Profile::firstOrNew([], ['id' => 1]);
 
-        // 3. Config Disk
-        $disk = config('filesystems.default', 'local');
-        $uploadApi = null;
-
-        if ($disk === 'cloudinary') {
-            $this->initCloudinary();
-            $uploadApi = new \Cloudinary\Api\Upload\UploadApi();
-        }
+        // 3. (Removed config)
 
         // 4. Handle Uploads
         // (Logika ini tetap jalan normal karena $profile->photo_path tersedia jika data ada)
@@ -53,9 +34,7 @@ class ProfileController extends Controller
             $data['photo_path'] = $this->handleFileUpload(
                 $request->file('photo_path'),
                 'profile',
-                $profile->photo_path,
-                $disk,
-                $uploadApi
+                $profile->photo_path
             );
         }
 
@@ -64,9 +43,7 @@ class ProfileController extends Controller
             $data['secondary_image'] = $this->handleFileUpload(
                 $request->file('secondary_image'),
                 'profile-secondary',
-                $profile->secondary_image,
-                $disk,
-                $uploadApi
+                $profile->secondary_image
             );
         }
 
@@ -76,8 +53,6 @@ class ProfileController extends Controller
                 $request->file('cv'),
                 'cv',
                 $profile->cv_path,
-                $disk,
-                $uploadApi,
                 'auto'
             );
         }
@@ -120,30 +95,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    private function handleFileUpload($file, $folder, $oldPath, $disk, $uploadApi, $resourceType = 'image')
-    {
-        try {
-            if ($disk === 'cloudinary') {
-                $result = $uploadApi->upload($file->getRealPath(), [
-                    'folder' => $folder,
-                    'resource_type' => $resourceType,
-                    'access_mode' => 'public',
-                    'overwrite' => true,
-                ]);
-                return $result['secure_url'];
-            } else {
-                if ($oldPath && !str_starts_with($oldPath, 'http')) {
-                    if (Storage::disk($disk)->exists($oldPath)) {
-                        Storage::disk($disk)->delete($oldPath);
-                    }
-                }
-                return $file->store($folder, $disk);
-            }
-        } catch (\Exception $e) {
-            Log::error("Upload Error ({$folder}): " . $e->getMessage());
-            throw $e;
-        }
-    }
+
 
     private function resolveUrl($path)
     {

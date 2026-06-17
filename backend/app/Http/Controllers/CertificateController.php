@@ -8,9 +8,11 @@ use App\Http\Requests\UpdateCertificateRequest;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class CertificateController extends Controller
 {
+    use ImageUploadTrait;
     public function index(Request $request)
     {
         $query = Certificate::query();
@@ -34,11 +36,7 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            if (config('filesystems.default') === 'cloudinary') {
-                $data['image_path'] = $request->file('image')->storeOnCloudinary('certificates')->getSecurePath();
-            } else {
-                $data['image_path'] = $request->file('image')->store('certificates', 'public');
-            }
+            $data['image_path'] = $this->handleFileUpload($request->file('image'), 'certificates');
         }
 
         $certificate = Certificate::create($data);
@@ -55,15 +53,7 @@ class CertificateController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            // Hapus file lama jika ada (hanya jika tersimpan di disk lokal)
-            if ($certificate->image_path && !str_starts_with($certificate->image_path, 'http')) {
-                Storage::disk('public')->delete($certificate->image_path);
-            }
-            if (config('filesystems.default') === 'cloudinary') {
-                $data['image_path'] = $request->file('image')->storeOnCloudinary('certificates')->getSecurePath();
-            } else {
-                $data['image_path'] = $request->file('image')->store('certificates', 'public');
-            }
+            $data['image_path'] = $this->handleFileUpload($request->file('image'), 'certificates', $certificate->image_path);
         }
 
         $certificate->update($data);
@@ -84,9 +74,7 @@ class CertificateController extends Controller
     {
         $certificate = Certificate::findOrFail($id);
 
-        if ($certificate->image_path && !str_starts_with($certificate->image_path, 'http')) {
-            Storage::disk('public')->delete($certificate->image_path);
-        }
+        $this->deleteFile($certificate->image_path);
 
         $certificate->delete();
         return response()->json(['message' => 'Certificate deleted']);

@@ -17,7 +17,7 @@ class ProfileApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Config::set('filesystems.default', 'local');
+        Config::set('filesystems.default', 'public');
     }
 
     public function test_admin_can_update_profile_text_only()
@@ -53,7 +53,7 @@ class ProfileApiTest extends TestCase
 
     public function test_admin_can_upload_photo_secondary_image_and_cv()
     {
-        Storage::fake('local');
+        Storage::fake('public');
         $user = User::factory()->create();
 
         $photo = UploadedFile::fake()->image('avatar.jpg');
@@ -83,9 +83,9 @@ class ProfileApiTest extends TestCase
         $this->assertNotNull($profile->secondary_image, 'Secondary Image path null');
         $this->assertNotNull($profile->cv_path, 'CV path null');
 
-        Storage::disk('local')->assertExists($profile->photo_path);
-        Storage::disk('local')->assertExists($profile->secondary_image);
-        Storage::disk('local')->assertExists($profile->cv_path);
+        Storage::disk('public')->assertExists($profile->photo_path);
+        Storage::disk('public')->assertExists($profile->secondary_image);
+        Storage::disk('public')->assertExists($profile->cv_path);
     }
 
     public function test_validation_error_works()

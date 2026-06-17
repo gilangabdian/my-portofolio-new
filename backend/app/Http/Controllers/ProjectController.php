@@ -7,9 +7,11 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageUploadTrait;
 
 class ProjectController extends Controller
 {
+    use ImageUploadTrait;
     public function index(Request $request)
     {
         $query = Project::query();
@@ -38,11 +40,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            if (config('filesystems.default') === 'cloudinary') {
-                $data['thumbnail_path'] = $request->file('thumbnail')->storeOnCloudinary('projects')->getSecurePath();
-            } else {
-                $data['thumbnail_path'] = $request->file('thumbnail')->store('projects', 'public');
-            }
+            $data['thumbnail_path'] = $this->handleFileUpload($request->file('thumbnail'), 'projects');
         }
 
         $project = Project::create($data);
@@ -60,14 +58,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            if ($project->thumbnail_path && !str_starts_with($project->thumbnail_path, 'http')) {
-                Storage::disk('public')->delete($project->thumbnail_path);
-            }
-            if (config('filesystems.default') === 'cloudinary') {
-                $data['thumbnail_path'] = $request->file('thumbnail')->storeOnCloudinary('projects')->getSecurePath();
-            } else {
-                $data['thumbnail_path'] = $request->file('thumbnail')->store('projects', 'public');
-            }
+            $data['thumbnail_path'] = $this->handleFileUpload($request->file('thumbnail'), 'projects', $project->thumbnail_path);
         }
 
         $project->update([
@@ -98,9 +89,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         $project = Project::findOrFail($id);
-        if ($project->thumbnail_path && !str_starts_with($project->thumbnail_path, 'http')) {
-            Storage::disk('public')->delete($project->thumbnail_path);
-        }
+        $this->deleteFile($project->thumbnail_path);
         $project->delete();
         return response()->json(['message' => 'Project deleted']);
     }
