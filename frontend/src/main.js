@@ -245,4 +245,11 @@ router.afterEach((to, from) => {
   }
 });
 
-createApp(App).use(router).mount("#app");
+import { createHead } from "@unhead/vue";
+
+const head = createHead();
+const app = createApp(App);
+
+app.use(router);
+app.use(head);
+app.mount("#app");
