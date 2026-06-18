@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
+import { createHead } from "@unhead/vue/client";
 import { createRouter, createWebHistory } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -88,7 +89,6 @@ const router = createRouter({
         },
       ],
     },
-
 
     {
       path: "/admin",
@@ -245,4 +245,9 @@ router.afterEach((to, from) => {
   }
 });
 
-createApp(App).use(router).mount("#app");
+const head = createHead();
+const app = createApp(App);
+
+app.use(router);
+app.use(head);
+app.mount("#app");
