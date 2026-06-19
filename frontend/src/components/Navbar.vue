@@ -5,10 +5,7 @@ import gsap from "gsap";
 import { useRoute } from "vue-router";
 import { useDark, useToggle } from "@vueuse/core";
 
-const isDark = useDark();
-if (localStorage.getItem("vueuse-color-scheme") === null) {
-  isDark.value = true; // Default to dark theme
-}
+const isDark = useDark({ initialValue: "dark" });
 const toggleDark = useToggle(isDark);
 
 const route = useRoute();

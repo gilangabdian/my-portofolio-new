@@ -5,7 +5,7 @@ import { useDark } from "@vueuse/core";
 import NProgress from "nprogress";
 
 // Initialize theme logic for this page
-const isDark = useDark();
+const isDark = useDark({ initialValue: "dark" });
 
 onMounted(() => {
   NProgress.done(); // Close the router's progress bar — this page has no data fetch
