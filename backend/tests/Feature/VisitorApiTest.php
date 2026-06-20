@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Visitor;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class VisitorApiTest extends TestCase
 {
@@ -104,5 +105,76 @@ class VisitorApiTest extends TestCase
         $response = $this->getJson('/api/admin/visitors');
 
         $response->assertStatus(401);
+    }
+    public function test_ignores_bots()
+    {
+        $response = $this->withHeaders(['User-Agent' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'])
+                         ->postJson('/api/visitors', [
+            'device_id' => 'bot-device',
+        ]);
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'Bots are not logged.']);
+
+        $this->assertDatabaseMissing('visitors', [
+            'device_id' => 'bot-device',
+        ]);
+    }
+
+    public function test_logs_location_for_new_visitor()
+    {
+        Http::fake([
+            'ip-api.com/*' => Http::response([
+                'status' => 'success',
+                'country' => 'Indonesia',
+                'regionName' => 'Jakarta',
+                'city' => 'Jakarta',
+                'isp' => 'Telkomsel',
+            ], 200)
+        ]);
+
+        $response = $this->withServerVariables(['REMOTE_ADDR' => '202.1.2.3'])
+                         ->postJson('/api/visitors', [
+            'device_id' => 'new-device-geo',
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('visitors', [
+            'device_id' => 'new-device-geo',
+            'ip_address' => '202.1.2.3',
+            'city' => 'Jakarta',
+            'country' => 'Indonesia',
+            'isp' => 'Telkomsel',
+        ]);
+    }
+    public function test_reads_ip_from_proxy_via_x_forwarded_for()
+    {
+        // Mock GeoIP response
+        Http::fake([
+            'ip-api.com/*' => Http::response([
+                'status' => 'success',
+                'country' => 'United States',
+                'regionName' => 'California',
+                'city' => 'San Francisco',
+                'isp' => 'Cloudflare',
+            ], 200)
+        ]);
+
+        // Simulate request through a proxy (e.g., Render/Cloudflare)
+        // REMOTE_ADDR is the proxy server's IP, but X-Forwarded-For is the real user's IP.
+        $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.5'])
+                         ->withHeaders(['X-Forwarded-For' => '198.51.100.10'])
+                         ->postJson('/api/visitors', [
+                             'device_id' => 'proxy-tested-device',
+                         ]);
+
+        $response->assertStatus(201);
+        
+        // Assert that the real IP (from X-Forwarded-For) is logged, NOT the proxy IP (10.0.0.5)
+        $this->assertDatabaseHas('visitors', [
+            'device_id' => 'proxy-tested-device',
+            'ip_address' => '198.51.100.10',
+            'city' => 'San Francisco',
+        ]);
     }
 }

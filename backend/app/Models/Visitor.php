@@ -22,6 +22,11 @@ class Visitor extends Model
         'device_type',
         'os',
         'browser',
-        'device_name'
+        'device_name',
+        'ip_address',
+        'city',
+        'region',
+        'country',
+        'isp'
     ];
 }

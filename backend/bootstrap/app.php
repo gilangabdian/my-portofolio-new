@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // PERBAIKAN JEBAKAN IP (RENDER/CLOUDFLARE):
+        // Mengizinkan Laravel untuk membaca IP asli dari Header X-Forwarded-For
+        $middleware->trustProxies(at: '*');
+
         // Mendaftarkan middleware ForceJsonResponse ke grup API
         $middleware->api(prepend: [
             ForceJsonResponse::class,

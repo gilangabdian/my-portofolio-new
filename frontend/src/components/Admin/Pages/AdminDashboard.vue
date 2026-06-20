@@ -424,10 +424,10 @@ onUnmounted(() => {
             <thead class="bg-black text-white">
               <tr>
                 <th class="p-3 border-r-2 border-black max-w-[50px]">LATEST</th>
-                <th class="p-3 border-r-2 border-black">DEVICE ID</th>
                 <th class="p-3 border-r-2 border-black text-center">DEVICE</th>
-                <th class="p-3 border-r-2 border-black">OS</th>
-                <th class="p-3 border-r-2 border-black">BROWSER</th>
+                <th class="p-3 border-r-2 border-black">OS & BROWSER</th>
+                <th class="p-3 border-r-2 border-black">LOCATION</th>
+                <th class="p-3 border-r-2 border-black hidden md:table-cell">NETWORK</th>
                 <th class="p-3 text-center">ACTION</th>
               </tr>
             </thead>
@@ -435,17 +435,25 @@ onUnmounted(() => {
               <tr v-for="(visitor, index) in visitorsList" :key="visitor.id" 
                   class="border-t-2 border-black hover:bg-yellow-100 transition-colors"
                   :class="{'bg-gray-50': index % 2 === 0}">
-                <td class="p-3 border-r-2 border-black font-bold">{{ new Date(visitor.updated_at).toLocaleDateString() }}</td>
-                <td class="p-3 border-r-2 border-black truncate max-w-[150px]" :title="visitor.device_id">
-                  {{ visitor.device_id.split('-')[0] }}...
+                <td class="p-3 border-r-2 border-black font-bold whitespace-nowrap">{{ new Date(visitor.updated_at).toLocaleDateString() }}</td>
+                <td class="p-3 border-r-2 border-black" :title="visitor.device_id">
+                  <div class="flex justify-center items-center gap-2 font-bold uppercase">
+                    <Icon :icon="getDeviceIcon(visitor.device_type)" class="text-xl" />
+                    <span class="hidden md:inline">{{ visitor.device_type || 'Unknown' }}</span>
+                  </div>
                 </td>
-                <td class="p-3 border-r-2 border-black flex justify-center items-center gap-2 font-bold uppercase">
-                  <Icon :icon="getDeviceIcon(visitor.device_type)" class="text-xl" />
-                  <span class="hidden md:inline">{{ visitor.device_type || 'Unknown' }}</span>
+                <td class="p-3 border-r-2 border-black">
+                  <div class="font-bold">{{ visitor.os || 'Unknown OS' }}</div>
+                  <div class="text-xs text-gray-500 truncate max-w-[120px]" :title="visitor.browser">{{ visitor.browser || '-' }}</div>
                 </td>
-                <td class="p-3 border-r-2 border-black">{{ visitor.os || '-' }}</td>
-                <td class="p-3 border-r-2 border-black font-bold text-xs truncate max-w-[100px]" :title="visitor.browser">
-                  {{ visitor.browser || '-' }}
+                <td class="p-3 border-r-2 border-black">
+                  <div class="font-bold truncate max-w-[120px] lg:max-w-[180px]" :title="visitor.city + ', ' + visitor.country">
+                    {{ visitor.city ? visitor.city + ', ' + visitor.country : 'Unknown' }}
+                  </div>
+                </td>
+                <td class="p-3 border-r-2 border-black hidden md:table-cell text-xs font-mono">
+                  <div class="font-bold text-gray-700 truncate max-w-[120px]" :title="visitor.isp">{{ visitor.isp || 'N/A' }}</div>
+                  <div class="text-gray-400">{{ visitor.ip_address || 'hidden' }}</div>
                 </td>
                 <td class="p-2 text-center">
                   <button @click="deleteVisitor(visitor.id)" 

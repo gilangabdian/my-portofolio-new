@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Jenssegers\Agent\Agent;
 
 class VisitorController extends Controller
@@ -19,24 +20,62 @@ class VisitorController extends Controller
         }
 
         $agent = new Agent();
+        $agent->setUserAgent($request->userAgent());
+
+        if ($agent->isRobot()) {
+            return response()->json(['message' => 'Bots are not logged.'], 200);
+        }
+
+        $existingVisitor = Visitor::where('device_id', $request->device_id)->first();
+        
+        $locationData = [
+            'ip_address' => null,
+            'city'       => null,
+            'region'     => null,
+            'country'    => null,
+            'isp'        => null,
+        ];
+
+        // Fetch location only if new visitor
+        if (!$existingVisitor) {
+            $ip = $request->ip();
+            if ($ip !== '127.0.0.1' && $ip !== '::1') {
+                try {
+                    $response = Http::timeout(3)->get("http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,isp");
+                    if ($response->successful() && $response->json('status') === 'success') {
+                        $locationData['ip_address'] = $ip;
+                        $locationData['city']       = $response->json('city');
+                        $locationData['region']     = $response->json('regionName');
+                        $locationData['country']    = $response->json('country');
+                        $locationData['isp']        = $response->json('isp');
+                    }
+                } catch (\Exception $e) {
+                    // Ignore API failure silently to not block tracking
+                }
+            }
+        }
 
         $deviceType = 'desktop';
         if ($agent->isTablet()) {
             $deviceType = 'tablet';
         } elseif ($agent->isMobile()) {
             $deviceType = 'mobile';
-        } elseif ($agent->isRobot()) {
-            $deviceType = 'robot';
+        }
+
+        $updateData = [
+            'device_type' => $deviceType,
+            'os'          => $agent->platform() ?: null,
+            'browser'     => $agent->browser() ?: null,
+            'device_name' => $agent->device() ?: null,
+        ];
+
+        if (!$existingVisitor) {
+            $updateData = array_merge($updateData, $locationData);
         }
 
         $visitor = Visitor::updateOrCreate(
             ['device_id' => $request->device_id],
-            [
-                'device_type' => $deviceType,
-                'os'          => $agent->platform() ?: null,
-                'browser'     => $agent->browser() ?: null,
-                'device_name' => $agent->device() ?: null,
-            ]
+            $updateData
         );
 
         return response()->json([

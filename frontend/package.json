@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@iconify/vue": "^5.0.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tiptap/extension-highlight": "^3.26.1",

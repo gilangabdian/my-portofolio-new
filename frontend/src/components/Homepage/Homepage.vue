@@ -187,13 +187,28 @@ function initStackingAnimation() {
 }
 
 // --- 5. Fungsi Tracking Visitor ---
-function initVisitorTracking() {
-  let deviceId = localStorage.getItem('device_id');
-  if (!deviceId) {
-    deviceId = crypto.randomUUID();
+import fpPromise from '@fingerprintjs/fingerprintjs';
+
+async function initVisitorTracking() {
+  try {
+    const fp = await fpPromise.load();
+    const result = await fp.get();
+    const deviceId = result.visitorId;
+
+    // Masih disimpan di local storage sebagai fallback cache
     localStorage.setItem('device_id', deviceId);
+
+    logVisitor(deviceId).catch(err => console.error("Failed to log visitor", err));
+  } catch (err) {
+    console.error("Failed to initialize FingerprintJS", err);
+    // Fallback if FingerprintJS fails
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem('device_id', deviceId);
+    }
+    logVisitor(deviceId).catch(err => console.error("Failed to log visitor", err));
   }
-  logVisitor(deviceId).catch(err => console.error("Failed to log visitor", err));
 }
 
 // --- 4. Watcher untuk Inisialisasi Animasi ---
