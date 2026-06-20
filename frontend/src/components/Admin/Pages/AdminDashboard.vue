@@ -452,7 +452,7 @@ onUnmounted(() => {
                   </div>
                 </td>
                 <td class="p-3 border-r-2 border-black hidden md:table-cell text-xs font-mono">
-                  <div class="font-bold text-gray-700 truncate max-w-[120px]" :title="visitor.isp">{{ visitor.isp || 'N/A' }}</div>
+                  <div class="font-bold text-gray-700 break-words max-w-[200px]" :title="visitor.isp">{{ visitor.isp || 'N/A' }}</div>
                   <div class="text-gray-400">{{ visitor.ip_address || 'hidden' }}</div>
                 </td>
                 <td class="p-2 text-center">
