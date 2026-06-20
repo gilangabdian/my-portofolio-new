@@ -29,31 +29,12 @@ class VisitorController extends Controller
         $existingVisitor = Visitor::where('device_id', $request->device_id)->first();
         
         $locationData = [
-            'ip_address' => null,
-            'city'       => null,
-            'region'     => null,
-            'country'    => null,
-            'isp'        => null,
+            'ip_address' => $request->ip_address ?: null,
+            'city'       => $request->city ?: null,
+            'region'     => $request->region ?: null,
+            'country'    => $request->country ?: null,
+            'isp'        => $request->isp ?: null,
         ];
-
-        // Fetch location only if new visitor
-        if (!$existingVisitor) {
-            $ip = $request->ip();
-            if ($ip !== '127.0.0.1' && $ip !== '::1') {
-                try {
-                    $response = Http::timeout(3)->get("http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,isp");
-                    if ($response->successful() && $response->json('status') === 'success') {
-                        $locationData['ip_address'] = $ip;
-                        $locationData['city']       = $response->json('city');
-                        $locationData['region']     = $response->json('regionName');
-                        $locationData['country']    = $response->json('country');
-                        $locationData['isp']        = $response->json('isp');
-                    }
-                } catch (\Exception $e) {
-                    // Ignore API failure silently to not block tracking
-                }
-            }
-        }
 
         $deviceType = 'desktop';
         if ($agent->isTablet()) {

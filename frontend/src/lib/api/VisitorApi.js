@@ -1,11 +1,11 @@
-export const logVisitor = async (deviceId) => {
+export const logVisitor = async (deviceId, locationData = {}) => {
   return await fetch(`${import.meta.env.VITE_APP_PATH}/visitors`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ device_id: deviceId }),
+    body: JSON.stringify({ device_id: deviceId, ...locationData }),
   });
 };
 

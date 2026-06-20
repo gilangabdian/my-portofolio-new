@@ -198,7 +198,25 @@ async function initVisitorTracking() {
     // Masih disimpan di local storage sebagai fallback cache
     localStorage.setItem('device_id', deviceId);
 
-    logVisitor(deviceId).catch(err => console.error("Failed to log visitor", err));
+    let locationData = {};
+    try {
+      // Menembak API GeoIP langsung dari browser pengunjung
+      const geoRes = await fetch("http://ip-api.com/json/?fields=status,country,regionName,city,isp,query");
+      const geoData = await geoRes.json();
+      if (geoData.status === 'success') {
+        locationData = {
+          ip_address: geoData.query,
+          city: geoData.city,
+          region: geoData.regionName,
+          country: geoData.country,
+          isp: geoData.isp
+        };
+      }
+    } catch (geoErr) {
+      console.warn("Failed to fetch GeoIP from client", geoErr);
+    }
+
+    logVisitor(deviceId, locationData).catch(err => console.error("Failed to log visitor", err));
   } catch (err) {
     console.error("Failed to initialize FingerprintJS", err);
     // Fallback if FingerprintJS fails
