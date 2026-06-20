@@ -36,8 +36,33 @@
                                 "properties": {
                                     "device_id": {
                                         "type": "string",
-                                        "description": "Unique device identifier UUID",
+                                        "description": "Unique device identifier UUID or Fingerprint",
                                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                                    },
+                                    "ip_address": {
+                                        "type": "string",
+                                        "description": "Optional IP Address from GeoIP fetch",
+                                        "example": "192.168.1.1"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "Optional City from GeoIP fetch",
+                                        "example": "Jakarta"
+                                    },
+                                    "region": {
+                                        "type": "string",
+                                        "description": "Optional Region from GeoIP fetch",
+                                        "example": "Jakarta"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "description": "Optional Country from GeoIP fetch",
+                                        "example": "Indonesia"
+                                    },
+                                    "isp": {
+                                        "type": "string",
+                                        "description": "Optional ISP from GeoIP fetch",
+                                        "example": "Telkomsel"
                                     }
                                 }
                             }
