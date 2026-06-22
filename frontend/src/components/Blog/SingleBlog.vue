@@ -87,7 +87,6 @@ onMounted(async () => {
     if (contentRef.value) {
       const images = contentRef.value.querySelectorAll("img");
       images.forEach((img) => {
-        // img.classList.add("cursor-pointer", "hover:opacity-90", "transition-opacity");
         img.addEventListener("click", () => {
           openModal(img.src);
         });
